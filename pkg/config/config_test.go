@@ -15,10 +15,10 @@ func TestLoad(t *testing.T) {
 		errorExpected require.ErrorAssertionFunc
 		useXDG        bool
 	}{
-		"ErrorsWhenJSONUnmarshalFails": {
+		"error when config file is not found": {
 			conf:          config.Config{},
-			errorExpected: test.IsSentinelError(config.ErrUnmashallingJSON),
-			useXDG:        true,
+			errorExpected: test.IsSentinelError(config.ErrConfigNotFound),
+			useXDG:        false,
 		},
 	}
 

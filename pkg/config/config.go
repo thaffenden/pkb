@@ -2,10 +2,10 @@ package config
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 
+	"github.com/pkg/errors"
 	"github.com/thaffenden/notes/pkg/sentinel"
 )
 
@@ -31,6 +31,10 @@ func Load() (Config, error) {
 
 	if xdg != "" {
 		configFilePath = fmt.Sprintf("%s/notes/config.json", xdg)
+	}
+
+	if configFilePath == "" {
+		return Config{}, sentinel.Wrap(nil, ErrConfigNotFound)
 	}
 
 	contents, err := os.ReadFile(configFilePath)
