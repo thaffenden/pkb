@@ -1,0 +1,10 @@
+{
+  "directory": "/home/tristan/notes",
+  "editor": "nvim",
+  "templates": [
+    {
+      "cmd": "interview",
+      "template": "interview.tpl.md"
+    }
+  ]
+}
