@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/thaffenden/notes/pkg/config"
+	"github.com/thaffenden/notes/pkg/test"
 )
 
 func TestLoad(t *testing.T) {
@@ -16,7 +17,7 @@ func TestLoad(t *testing.T) {
 	}{
 		"ErrorsWhenJSONUnmarshalFails": {
 			conf:          config.Config{},
-			errorExpected: require.Error,
+			errorExpected: test.IsSentinelError(config.ErrUnmashallingJSON),
 			useXDG:        true,
 		},
 	}

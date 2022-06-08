@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+
+	"github.com/thaffenden/notes/pkg/sentinel"
 )
 
 type (
@@ -39,7 +41,7 @@ func Load() (Config, error) {
 	var configContents Config
 	err = json.Unmarshal(contents, &configContents)
 	if err != nil {
-		return Config{}, errors.New("error unmarshalling config file")
+		return Config{}, sentinel.Wrap(err, ErrUnmashallingJSON)
 	}
 
 	return configContents, nil
