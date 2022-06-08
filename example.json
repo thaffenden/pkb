@@ -4,7 +4,7 @@
   "templates": [
     {
       "cmd": "interview",
-      "template": "interview.tpl.md"
+      "file": "interview.tpl.md"
     }
   ]
 }

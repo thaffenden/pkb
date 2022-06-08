@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/thaffenden/notes/pkg/config"
 )
 
 var rootCmd = &cobra.Command{
@@ -13,6 +14,6 @@ var rootCmd = &cobra.Command{
 }
 
 // Execute executes the root command.
-func Execute() error {
+func Execute(conf config.Config) error {
 	return rootCmd.Execute()
 }
