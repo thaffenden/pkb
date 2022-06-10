@@ -3,8 +3,8 @@
   "editor": "nvim",
   "templates": [
     {
-      "cmd": "interview",
-      "file": "interview.tpl.md"
+      "cmd": "foo",
+      "file": "bar.tpl.md"
     }
   ]
 }

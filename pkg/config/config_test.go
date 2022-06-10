@@ -28,6 +28,20 @@ func TestLoad(t *testing.T) {
 			configDir:     "invalid",
 			errorExpected: test.IsSentinelError(config.ErrUnmashallingJSON),
 		},
+		"returns config struct when valid file exists": {
+			conf: config.Config{
+				Directory: "/home/username/notes",
+				Editor:    "nvim",
+				Templates: []config.Template{
+					{
+						Cmd:  "foo",
+						File: "bar.tpl.md",
+					},
+				},
+			},
+			configDir:     "valid",
+			errorExpected: require.NoError,
+		},
 	}
 
 	for description, testCase := range testCases {
