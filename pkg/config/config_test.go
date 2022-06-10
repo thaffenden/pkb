@@ -1,6 +1,9 @@
 package config_test
 
 import (
+	"fmt"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,13 +15,18 @@ import (
 func TestLoad(t *testing.T) {
 	testCases := map[string]struct {
 		conf          config.Config
+		configDir     string
 		errorExpected require.ErrorAssertionFunc
-		useXDG        bool
 	}{
-		"error when config file is not found": {
+		"errors when config file is not found": {
 			conf:          config.Config{},
+			configDir:     "",
 			errorExpected: test.IsSentinelError(config.ErrConfigNotFound),
-			useXDG:        false,
+		},
+		"errors when config file is not valid json": {
+			conf:          config.Config{},
+			configDir:     "invalid",
+			errorExpected: test.IsSentinelError(config.ErrUnmashallingJSON),
 		},
 	}
 
@@ -26,7 +34,9 @@ func TestLoad(t *testing.T) {
 		tc := testCase
 
 		t.Run(description, func(t *testing.T) {
-			t.Parallel()
+			if tc.configDir != "" {
+				os.Setenv("XDG_CONFIG_HOME", filepath.FromSlash(fmt.Sprintf("testdata/%s", tc.configDir)))
+			}
 
 			conf, err := config.Load()
 			tc.errorExpected(t, err)

@@ -1,0 +1,11 @@
+{
+  "directory": "/home/username/notes",
+  "editor": "nvim",
+  "templates": [
+    {
+      "cmd": "interview",
+      "file": "interview.tpl.md"
+    }
+  ]
+}
+
