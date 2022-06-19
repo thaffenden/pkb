@@ -26,14 +26,14 @@ type (
 
 // Load reads the users config file and returns the config struct.
 func Load() (Config, error) {
-	configFilePath := ""
-	xdg := os.Getenv("XDG_CONFIG_HOME")
+	root := os.Getenv("XDG_CONFIG_HOME")
 
-	if xdg != "" {
-		configFilePath = fmt.Sprintf("%s/notes/config.json", xdg)
+	if root == "" {
+		root = fmt.Sprintf("%s/.config", os.Getenv("HOME"))
 	}
 
-	if configFilePath == "" {
+	configFilePath := fmt.Sprintf("%s/notes/config.json", root)
+	if _, err := os.Stat(configFilePath); err != nil {
 		return Config{}, sentinel.Wrap(nil, ErrConfigNotFound)
 	}
 
