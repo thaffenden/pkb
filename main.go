@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/thaffenden/notes/cmd"
-	"github.com/thaffenden/notes/pkg/config"
+	"github.com/thaffenden/notes/internal/config"
 )
 
 func main() {

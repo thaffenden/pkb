@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/thaffenden/notes/pkg/sentinel"
+	"github.com/thaffenden/notes/internal/sentinel"
 )
 
 type (

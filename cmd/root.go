@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/thaffenden/notes/cmd/new"
-	"github.com/thaffenden/notes/pkg/config"
+	"github.com/thaffenden/notes/internal/config"
 )
 
 var rootCmd = &cobra.Command{
