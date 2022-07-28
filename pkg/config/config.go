@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pkg/errors"
 	"github.com/thaffenden/notes/pkg/sentinel"
 )
 
@@ -39,7 +38,7 @@ func Load() (Config, error) {
 
 	contents, err := os.ReadFile(configFilePath)
 	if err != nil {
-		return Config{}, errors.New(fmt.Sprintf("error reading config file at %s", configFilePath))
+		return Config{}, sentinel.WithMessagef(err, ErrReadingConfigFile, "error reading config file at %s", configFilePath)
 	}
 
 	var configContents Config

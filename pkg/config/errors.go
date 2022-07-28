@@ -1,8 +1,9 @@
 package config
 
 const (
-	ErrUnmashallingJSON Error = iota
-	ErrConfigNotFound
+	ErrConfigNotFound Error = iota
+	ErrReadingConfigFile
+	ErrUnmashallingJSON
 )
 
 type Error uint
@@ -12,6 +13,9 @@ func (e Error) Error() string {
 	switch e {
 	case ErrConfigNotFound:
 		return "no config file found"
+
+	case ErrReadingConfigFile:
+		return "error reading config file"
 
 	case ErrUnmashallingJSON:
 		return "error unmarshalling JSON config file"
