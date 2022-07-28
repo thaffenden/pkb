@@ -1,7 +1,9 @@
 package config
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 
@@ -47,4 +49,15 @@ func Load() (Config, error) {
 	}
 
 	return configContents, nil
+}
+
+// FromContext returns the Config struct from the provided context with the
+// correct type asserted from the default context interface{} return value.
+func FromContext(ctx context.Context) (Config, error) {
+		conf, ok := ctx.Value("config").(Config)
+		if ok == false {
+			return Config{}, errors.New("error getting config from context")
+		}
+
+		return conf, nil
 }
