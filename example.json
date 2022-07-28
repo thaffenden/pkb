@@ -3,6 +3,10 @@
   "editor": "nvim",
   "templates": [
     {
+      "cmd": "default",
+      "file": "default.tpl.md"
+    }
+    {
       "cmd": "interview",
       "file": "interview.tpl.md"
     }

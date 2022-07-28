@@ -33,6 +33,7 @@ func Load() (Config, error) {
 	}
 
 	configFilePath := fmt.Sprintf("%s/notes/config.json", root)
+	fmt.Printf("checking %s\n", configFilePath)
 	if _, err := os.Stat(configFilePath); err != nil {
 		return Config{}, sentinel.Wrap(nil, ErrConfigNotFound)
 	}
