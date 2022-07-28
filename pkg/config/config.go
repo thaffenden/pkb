@@ -33,7 +33,6 @@ func Load() (Config, error) {
 	}
 
 	configFilePath := fmt.Sprintf("%s/notes/config.json", root)
-	fmt.Printf("checking %s\n", configFilePath)
 	if _, err := os.Stat(configFilePath); err != nil {
 		return Config{}, sentinel.Wrap(nil, ErrConfigNotFound)
 	}
@@ -44,8 +43,7 @@ func Load() (Config, error) {
 	}
 
 	var configContents Config
-	err = json.Unmarshal(contents, &configContents)
-	if err != nil {
+	if err := json.Unmarshal(contents, &configContents); err != nil {
 		return Config{}, sentinel.Wrap(err, ErrUnmashallingJSON)
 	}
 
