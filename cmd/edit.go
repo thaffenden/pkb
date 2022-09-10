@@ -1,8 +1,10 @@
 package cmd
 
 import (
-	"fmt"
+	"os"
+	"os/exec"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/thaffenden/notes/internal/config"
 )
@@ -16,11 +18,15 @@ func NewCmdEdit() *cobra.Command {
 				return err
 			}
 
-			fmt.Println(conf)
-			// cmd := exec.Command(conf.Editor, conf.Directory)
-			// if err := cmd.Run(); err != nil {
-			// 	return err
-			// }
+			cmd := exec.Command(conf.Editor)
+			cmd.Dir = conf.Directory
+			cmd.Stdin = os.Stdin
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+
+			if err := cmd.Run(); err != nil {
+				return errors.Wrapf(err, "error launching editor %s in directory %s", conf.Editor, conf.Directory)
+			}
 
 			return nil
 		},
