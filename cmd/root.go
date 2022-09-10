@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/spf13/cobra"
-	"github.com/thaffenden/notes/cmd/new"
-	"github.com/thaffenden/notes/internal/config"
+	"github.com/thaffenden/pkb/cmd/new"
+	"github.com/thaffenden/pkb/internal/config"
 )
 
 var rootCmd = &cobra.Command{
@@ -13,7 +13,7 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	Short: "manage notes in markdown files",
-	Use:   "notes",
+	Use:   "pkb",
 }
 
 // Execute executes the root command.

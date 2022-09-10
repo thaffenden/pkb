@@ -1,4 +1,4 @@
-module github.com/thaffenden/notes
+module github.com/thaffenden/pkb
 
 go 1.17
 

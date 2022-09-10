@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/thaffenden/notes/internal/config"
-	"github.com/thaffenden/notes/internal/test"
+	"github.com/thaffenden/pkb/internal/config"
+	"github.com/thaffenden/pkb/internal/test"
 )
 
 func TestLoad(t *testing.T) {

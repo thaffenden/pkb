@@ -6,7 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"github.com/thaffenden/notes/internal/config"
+	"github.com/thaffenden/pkb/internal/config"
 )
 
 // NewCmdEdit creates the new command "edit" used to open your editor to edit existing notes.

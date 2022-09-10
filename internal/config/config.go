@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/thaffenden/notes/internal/sentinel"
+	"github.com/thaffenden/pkb/internal/sentinel"
 )
 
 type (

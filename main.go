@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/thaffenden/notes/cmd"
-	"github.com/thaffenden/notes/internal/config"
+	"github.com/thaffenden/pkb/cmd"
+	"github.com/thaffenden/pkb/internal/config"
 )
 
 func main() {

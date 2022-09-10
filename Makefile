@@ -1,4 +1,4 @@
-BINARY_NAME=notes
+BINARY_NAME=pkb
 DIR=./...
 
 .PHONY: build
