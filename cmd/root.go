@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/spf13/cobra"
-	"github.com/thaffenden/pkb/cmd/new"
 	"github.com/thaffenden/pkb/internal/config"
 )
 
@@ -23,6 +22,6 @@ func Execute(conf config.Config) error {
 }
 
 func init() {
-	rootCmd.AddCommand(new.NewCmd())
-	rootCmd.AddCommand(NewCmdEdit())
+	rootCmd.AddCommand(CmdNew())
+	rootCmd.AddCommand(CmdEdit())
 }
