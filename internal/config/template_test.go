@@ -30,11 +30,26 @@ func TestHashSubTemplates(t *testing.T) {
 			template: config.Template{},
 			expected: false,
 		},
-		"returns true when config has sub templates": {
+		"returns true when config has one valid template": {
 			template: config.Template{
 				SubTemplates: []config.Template{
 					{
 						Type: "foo",
+						File: "foo.tpl.md",
+					},
+				},
+			},
+			expected: true,
+		},
+		"returns true when config has many valid templates": {
+			template: config.Template{
+				SubTemplates: []config.Template{
+					{
+						Type: "foo",
+						File: "foo.tpl.md",
+					},
+					{
+						Type: "bar",
 						File: "bar.tpl.md",
 					},
 				},

@@ -17,13 +17,13 @@ func (t Template) HasSubTemplates() bool {
 		return false
 	// handle an empty template inside sub templates
 	case 1:
-		return !t.SubTemplates[0].IsEmpty()
+		return !t.SubTemplates[0].isEmpty()
 	default:
 		return true
 	}
 }
 
-// IsEmpty checks if the config for the template object is empty.
-func (t Template) IsEmpty() bool {
+// isEmpty checks if the config for the template object is empty.
+func (t Template) isEmpty() bool {
 	return t.Type == ""
 }
