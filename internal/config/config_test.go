@@ -34,7 +34,7 @@ func TestLoad(t *testing.T) {
 				Editor:    "nvim",
 				Templates: []config.Template{
 					{
-						Cmd:  "foo",
+						Type: "foo",
 						File: "bar.tpl.md",
 					},
 				},
@@ -48,7 +48,7 @@ func TestLoad(t *testing.T) {
 				Editor:    "nvim",
 				Templates: []config.Template{
 					{
-						Cmd:  "foo",
+						Type: "foo",
 						File: "bar.tpl.md",
 					},
 				},

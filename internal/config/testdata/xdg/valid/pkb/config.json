@@ -3,7 +3,7 @@
   "editor": "nvim",
   "templates": [
     {
-      "cmd": "foo",
+      "type": "foo",
       "file": "bar.tpl.md"
     }
   ]

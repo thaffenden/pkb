@@ -20,7 +20,7 @@ type (
 
 	// Template represents the config options for a custom template file.
 	Template struct {
-		Cmd  string `json:"cmd"`
+		Type string `json:"type"`
 		File string `json:"file"`
 	}
 )
@@ -33,7 +33,7 @@ func Load() (Config, error) {
 		root = fmt.Sprintf("%s/.config", os.Getenv("HOME"))
 	}
 
-	configFilePath := fmt.Sprintf("%s/notes/config.json", root)
+	configFilePath := fmt.Sprintf("%s/pkb/config.json", root)
 	if _, err := os.Stat(configFilePath); err != nil {
 		return Config{}, sentinel.Wrap(nil, ErrConfigNotFound)
 	}
