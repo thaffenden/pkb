@@ -9,6 +9,16 @@
     {
       "type": "interview",
       "file": "interview.tpl.md"
+      "sub_templates": [
+        {
+          "type": "back-end",
+          "file": "interview.back-end.tpl.md"
+        },
+        {
+          "type": "front-end",
+          "file": "interview.front-end.tpl.md"
+        }
+      ]
     }
   ]
 }

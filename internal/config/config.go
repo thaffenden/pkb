@@ -17,12 +17,6 @@ type (
 		Editor    string     `json:"editor"`
 		Templates []Template `json:"templates"`
 	}
-
-	// Template represents the config options for a custom template file.
-	Template struct {
-		Type string `json:"type"`
-		File string `json:"file"`
-	}
 )
 
 // Load reads the users config file and returns the config struct.
