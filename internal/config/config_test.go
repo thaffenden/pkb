@@ -1,6 +1,7 @@
 package config_test
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -75,6 +76,66 @@ func TestLoad(t *testing.T) {
 			conf, err := config.Load()
 			tc.errorExpected(t, err)
 			assert.Equal(t, tc.conf, conf)
+		})
+	}
+}
+
+func TestFromContext(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		ctxFunc       func() context.Context
+		errorExpected require.ErrorAssertionFunc
+		expected      config.Config
+	}{
+		"returns config struct when valid one is set in context": {
+			ctxFunc: func() context.Context {
+				return context.WithValue(
+					context.Background(),
+					"config",
+					config.Config{Editor: "nvim"},
+				)
+			},
+			errorExpected: require.NoError,
+			expected: config.Config{
+				Editor: "nvim",
+			},
+		},
+		"returns error when no key called config exists on context": {
+			ctxFunc: func() context.Context {
+				return context.WithValue(
+					context.Background(),
+					"foo",
+					[]string{},
+				)
+			},
+			errorExpected: require.Error,
+			expected:      config.Config{},
+		},
+		"returns error when config key is not of type config.Config": {
+			ctxFunc: func() context.Context {
+				return context.WithValue(
+					context.Background(),
+					"config",
+					[]string{},
+				)
+			},
+			errorExpected: require.Error,
+			expected:      config.Config{},
+		},
+	}
+
+	for name, testCase := range testCases {
+		tc := testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			ctx := tc.ctxFunc()
+			actual, err := config.FromContext(ctx)
+			tc.errorExpected(t, err)
+
+			assert.Equal(t, tc.expected, actual)
 		})
 	}
 }
