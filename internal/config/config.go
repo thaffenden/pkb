@@ -13,9 +13,9 @@ import (
 type (
 	// Config represents the options defined in the config file.
 	Config struct {
-		Directory string     `json:"directory"`
-		Editor    string     `json:"editor"`
-		Templates []Template `json:"templates"`
+		Directory string    `json:"directory"`
+		Editor    string    `json:"editor"`
+		Templates Templates `json:"templates"`
 	}
 )
 

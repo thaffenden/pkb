@@ -17,10 +17,10 @@ func CmdNew() *cobra.Command {
 			}
 
 			fmt.Println("new command")
+			fmt.Printf("using template: %+v", conf.Templates)
 
-			if len(conf.Templates) == 1 {
-				fmt.Printf("using template: %+v", conf.Templates[0])
-			}
+			//if len(conf.Templates) == 1 {
+			//}
 
 			// open survey picker to selet template type
 			// TODO: SUB_TEMPLATES if node has sub templates prompt for them

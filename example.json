@@ -1,24 +1,20 @@
 {
   "directory": "/home/tristan/notes",
   "editor": "nvim",
-  "templates": [
-    {
-      "type": "default",
+  "templates": { 
+    "default": {
       "file": "default.tpl.md"
-    }
-    {
-      "type": "interview",
+    },
+    "interview": {
       "file": "interview.tpl.md"
-      "sub_templates": [
-        {
-          "type": "back-end",
+      "sub_templates": { 
+        "back-end": {
           "file": "interview.back-end.tpl.md"
         },
-        {
-          "type": "front-end",
+        "front-end": {
           "file": "interview.front-end.tpl.md"
         }
-      ]
+      }
     }
-  ]
+  }
 }

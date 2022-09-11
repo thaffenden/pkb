@@ -33,9 +33,8 @@ func TestLoad(t *testing.T) {
 			conf: config.Config{
 				Directory: "/home/username/notes",
 				Editor:    "nvim",
-				Templates: []config.Template{
-					{
-						Type: "foo",
+				Templates: config.Templates{
+					"foo": {
 						File: "bar.tpl.md",
 					},
 				},
@@ -47,9 +46,8 @@ func TestLoad(t *testing.T) {
 			conf: config.Config{
 				Directory: "/home/username/notes",
 				Editor:    "nvim",
-				Templates: []config.Template{
-					{
-						Type: "foo",
+				Templates: config.Templates{
+					"foo": {
 						File: "bar.tpl.md",
 					},
 				},

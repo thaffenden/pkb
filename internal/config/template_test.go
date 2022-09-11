@@ -16,13 +16,13 @@ func TestHashSubTemplates(t *testing.T) {
 	}{
 		"returns false when config has empty sub templates": {
 			template: config.Template{
-				SubTemplates: []config.Template{},
+				SubTemplates: config.Templates{},
 			},
 			expected: false,
 		},
 		"returns false when config has empty template in sub templates": {
 			template: config.Template{
-				SubTemplates: []config.Template{{}},
+				SubTemplates: config.Templates{"foo": {}},
 			},
 			expected: false,
 		},
@@ -32,9 +32,8 @@ func TestHashSubTemplates(t *testing.T) {
 		},
 		"returns true when config has one valid template": {
 			template: config.Template{
-				SubTemplates: []config.Template{
-					{
-						Type: "foo",
+				SubTemplates: config.Templates{
+					"foo": {
 						File: "foo.tpl.md",
 					},
 				},
@@ -43,13 +42,11 @@ func TestHashSubTemplates(t *testing.T) {
 		},
 		"returns true when config has many valid templates": {
 			template: config.Template{
-				SubTemplates: []config.Template{
-					{
-						Type: "foo",
+				SubTemplates: config.Templates{
+					"foo": {
 						File: "foo.tpl.md",
 					},
-					{
-						Type: "bar",
+					"bar": {
 						File: "bar.tpl.md",
 					},
 				},
