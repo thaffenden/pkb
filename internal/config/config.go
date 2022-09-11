@@ -34,7 +34,7 @@ func Load() (Config, error) {
 
 	contents, err := os.ReadFile(configFilePath)
 	if err != nil {
-		return Config{}, sentinel.WithMessagef(err, ErrReadingConfigFile, "error reading config file at %s", configFilePath)
+		return Config{}, sentinel.Wrap(err, ErrReadingConfigFile)
 	}
 
 	var configContents Config
