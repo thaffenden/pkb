@@ -3,7 +3,8 @@
   "editor": "nvim",
   "templates": { 
     "foo": {
-      "file": "bar.tpl.md"
+      "file": "bar.tpl.md",
+      "output_dir": "bar"
     }
   }
 }

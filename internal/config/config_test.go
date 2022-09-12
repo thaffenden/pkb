@@ -33,9 +33,11 @@ func TestLoad(t *testing.T) {
 			conf: config.Config{
 				Directory: "/home/username/notes",
 				Editor:    "nvim",
+				FilePath:  "testdata/xdg/valid/pkb/config.json",
 				Templates: config.Templates{
 					"foo": {
-						File: "bar.tpl.md",
+						File:      "bar.tpl.md",
+						OutputDir: "bar",
 					},
 				},
 			},
@@ -46,9 +48,11 @@ func TestLoad(t *testing.T) {
 			conf: config.Config{
 				Directory: "/home/username/notes",
 				Editor:    "nvim",
+				FilePath:  "testdata/home/.config/pkb/config.json",
 				Templates: config.Templates{
 					"foo": {
-						File: "bar.tpl.md",
+						File:      "bar.tpl.md",
+						OutputDir: "",
 					},
 				},
 			},
