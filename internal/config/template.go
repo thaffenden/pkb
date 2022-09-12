@@ -1,9 +1,6 @@
 package config
 
 import (
-	"fmt"
-
-	"github.com/AlecAivazis/survey/v2"
 	"golang.org/x/exp/maps"
 )
 
@@ -36,31 +33,4 @@ func (t Template) HasSubTemplates() bool {
 // isEmpty checks if the config for the template object is empty.
 func (t Template) isEmpty() bool {
 	return t.File == ""
-}
-
-// Select prompts the user to select a template from the ones defined in config.
-func (t Templates) Select() (Template, error) {
-	answer := struct {
-		Selected string `survey:"template"`
-	}{}
-
-	err := survey.Ask([]*survey.Question{
-		{
-			Name: "template",
-			Prompt: &survey.Select{
-				Message: "select a template:",
-				Options: maps.Keys(t),
-			},
-		},
-	}, &answer)
-	if err != nil {
-		return Template{}, err
-	}
-
-	selected, ok := t[answer.Selected]
-	if !ok {
-		return Template{}, fmt.Errorf("no template named '%s' exists in config file", answer.Selected)
-	}
-
-	return selected, nil
 }

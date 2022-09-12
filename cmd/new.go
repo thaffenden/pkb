@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/thaffenden/pkb/internal/config"
+	"github.com/thaffenden/pkb/internal/prompt"
 )
 
 // CmdNew creates the new command "new" used to create new notes.
@@ -16,21 +17,15 @@ func CmdNew() *cobra.Command {
 				return err
 			}
 
-			selected, err := conf.Templates.Select()
+			selected := []config.Template{}
+			selector := prompt.NewTemplateSelector()
+
+			selected, err = selector.SelectTemplateWithSubTemplates(conf.Templates, selected)
 			if err != nil {
 				return err
 			}
 
-			var subTemplate config.Template
-			if selected.HasSubTemplates() {
-				subTemplate, err = selected.SubTemplates.Select()
-				if err != nil {
-					return err
-				}
-			}
-
 			fmt.Printf("%+v\n", selected)
-			fmt.Printf("%+v\n", subTemplate)
 			// TODO: SUB_TEMPLATES if node has sub templates prompt for them
 
 			// get doc name (flag or prompt)
