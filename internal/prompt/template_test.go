@@ -1,6 +1,7 @@
 package prompt_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -78,6 +79,14 @@ func TestSelectTemplateWithSubTemplates(t *testing.T) {
 				},
 			},
 			assertError: require.NoError,
+		},
+		"returns error when select errors": {
+			selectorFunc: func(templates config.Templates) (config.Template, error) {
+				return config.Template{}, errors.New("error picking template")
+			},
+			input:       config.Templates{"foo": {File: "foo.tpl.md"}},
+			expected:    []config.Template{},
+			assertError: require.Error,
 		},
 	}
 

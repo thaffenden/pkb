@@ -26,6 +26,14 @@ func TestSanitiseFileName(t *testing.T) {
 			input:    "new&&test_who*dis+",
 			expected: "new-test_who-dis.md",
 		},
+		"doesn't add file extension if provided in name": {
+			input:    "already done.md",
+			expected: "already-done.md",
+		},
+		"handles slashes in name": {
+			input:    "do/this/one",
+			expected: "do-this-one.md",
+		},
 	}
 
 	for name, testCase := range testCases {
