@@ -27,7 +27,10 @@ func NewTemplateSelector() TemplateSelector {
 // SelectTemplateWithSubTemplates is a recursive function to select template
 // with nested sub templates and return them in a slice so they can all be
 // referenced and the fully nested path to a document can be worked out.
-func (t TemplateSelector) SelectTemplateWithSubTemplates(templates config.Templates, selectedTemplates []config.Template) ([]config.Template, error) {
+func (t TemplateSelector) SelectTemplateWithSubTemplates(
+	templates config.Templates,
+	selectedTemplates []config.Template,
+) ([]config.Template, error) {
 	selected, err := t.SelectFunc(templates)
 	if err != nil {
 		return []config.Template{}, err
