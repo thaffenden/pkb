@@ -16,10 +16,6 @@ func CmdNew() *cobra.Command {
 				return err
 			}
 
-			fmt.Println("new command")
-			fmt.Printf("using template: %+v", conf.Templates)
-
-			// open survey picker to selet template type
 			selected, err := conf.Templates.Select()
 			if err != nil {
 				return err
