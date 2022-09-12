@@ -14,6 +14,7 @@ type Templates map[string]Template
 // for template and sub templates.
 type Template struct {
 	File         string    `json:"file"`
+	OutputDir    string    `json:"output_dir"`
 	SubTemplates Templates `json:"sub_templates,omitempty"`
 }
 

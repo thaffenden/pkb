@@ -4,15 +4,19 @@
   "templates": { 
     "default": {
       "file": "default.tpl.md"
+      "output_dir": "misc" 
     },
     "interview": {
       "file": "interview.tpl.md"
+      "output_dir": "interviews",
       "sub_templates": { 
         "back-end": {
           "file": "interview.back-end.tpl.md"
+          "output_dir": "back-end",
         },
         "front-end": {
           "file": "interview.front-end.tpl.md"
+          "output_dir": "front-end",
         }
       }
     }

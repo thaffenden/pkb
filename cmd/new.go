@@ -21,7 +21,16 @@ func CmdNew() *cobra.Command {
 				return err
 			}
 
+			var subTemplate config.Template
+			if selected.HasSubTemplates() {
+				subTemplate, err = selected.SubTemplates.Select()
+				if err != nil {
+					return err
+				}
+			}
+
 			fmt.Printf("%+v\n", selected)
+			fmt.Printf("%+v\n", subTemplate)
 			// TODO: SUB_TEMPLATES if node has sub templates prompt for them
 
 			// get doc name (flag or prompt)
