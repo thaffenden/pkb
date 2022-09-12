@@ -13,21 +13,24 @@ func TestOutputPath(t *testing.T) {
 
 	testCases := map[string]struct {
 		name      string
+		rootDir   string
 		templates []config.Template
 		expected  string
 	}{
 		"returns path for single template": {
-			name: "simple.md",
+			name:    "simple.md",
+			rootDir: "/home/username/notes",
 			templates: []config.Template{
 				{
 					File:      "magic.tpl.md",
 					OutputDir: "magic",
 				},
 			},
-			expected: "magic/simple.md",
+			expected: "/home/username/notes/magic/simple.md",
 		},
 		"creates full nested dir path when there are subtemplates": {
-			name: "nested-example.md",
+			name:    "nested-example.md",
+			rootDir: "/home/username/notes",
 			templates: []config.Template{
 				{
 					File:      "foo.tpl.md",
@@ -42,7 +45,7 @@ func TestOutputPath(t *testing.T) {
 					OutputDir: "wow",
 				},
 			},
-			expected: "foo/bar/wow/nested-example.md",
+			expected: "/home/username/notes/foo/bar/wow/nested-example.md",
 		},
 	}
 
@@ -52,7 +55,7 @@ func TestOutputPath(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			actual, _ := create.OutputPath(tc.name, tc.templates)
+			actual := create.OutputPath(tc.rootDir, tc.name, tc.templates)
 			assert.Equal(t, tc.expected, actual)
 		})
 	}

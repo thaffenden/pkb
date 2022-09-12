@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/thaffenden/pkb/internal/sentinel"
 )
@@ -13,8 +13,9 @@ import (
 type (
 	// Config represents the options defined in the config file.
 	Config struct {
-		Directory string    `json:"directory"`
-		Editor    string    `json:"editor"`
+		Directory string `json:"directory"`
+		Editor    string `json:"editor"`
+		FilePath  string
 		Templates Templates `json:"templates"`
 	}
 )
@@ -24,10 +25,11 @@ func Load() (Config, error) {
 	root := os.Getenv("XDG_CONFIG_HOME")
 
 	if root == "" {
-		root = fmt.Sprintf("%s/.config", os.Getenv("HOME"))
+		root = filepath.Join(os.Getenv("HOME"), ".config")
 	}
 
-	configFilePath := fmt.Sprintf("%s/pkb/config.json", root)
+	configFilePath := filepath.Join(root, "pkb", "config.json")
+
 	if _, err := os.Stat(configFilePath); err != nil {
 		return Config{}, sentinel.Wrap(nil, ErrConfigNotFound)
 	}
@@ -41,6 +43,8 @@ func Load() (Config, error) {
 	if err := json.Unmarshal(contents, &configContents); err != nil {
 		return Config{}, sentinel.Wrap(err, ErrUnmashallingJSON)
 	}
+
+	configContents.FilePath = configFilePath
 
 	return configContents, nil
 }

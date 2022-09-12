@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/thaffenden/pkb/internal/config"
+	"github.com/thaffenden/pkb/internal/create"
 	"github.com/thaffenden/pkb/internal/prompt"
 )
 
@@ -25,17 +24,16 @@ func CmdNew() *cobra.Command {
 				return err
 			}
 
-			fmt.Printf("%+v\n", selected)
-
 			fileName, err := prompt.EnterFileName()
 			if err != nil {
 				return err
 			}
 
-			fmt.Printf("file name: %s", fileName)
+			err = create.FileFromTemplate(conf, fileName, selected)
+			if err != nil {
+				return err
+			}
 
-			// create new doc with selected template type
-			// open doc with defined editor
 			return nil
 		},
 		Short: "create a new note",
