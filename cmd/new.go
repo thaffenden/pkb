@@ -26,11 +26,16 @@ func CmdNew() *cobra.Command {
 			}
 
 			fmt.Printf("%+v\n", selected)
-			// TODO: SUB_TEMPLATES if node has sub templates prompt for them
 
-			// get doc name (flag or prompt)
+			fileName, err := prompt.EnterFileName()
+			if err != nil {
+				return err
+			}
 
-			// open new doc with selected template type
+			fmt.Printf("file name: %s", fileName)
+
+			// create new doc with selected template type
+			// open doc with defined editor
 			return nil
 		},
 		Short: "create a new note",
