@@ -23,7 +23,7 @@ func FileFromTemplate(conf config.Config, name string, templates []config.Templa
 		}
 	}
 
-	templateFile := filepath.Join(conf.FilePath, templates[len(templates)-1].File)
+	templateFile := filepath.Clean(filepath.Join(conf.FilePath, templates[len(templates)-1].File))
 	contents, err := ioutil.ReadFile(templateFile)
 	if err != nil {
 		return err

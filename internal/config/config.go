@@ -36,7 +36,7 @@ func Load() (Config, error) {
 		root = filepath.Join(os.Getenv("HOME"), ".config")
 	}
 
-	configFilePath := filepath.Join(root, "pkb", "config.json")
+	configFilePath := filepath.Clean(filepath.Join(root, "pkb", "config.json"))
 
 	if _, err := os.Stat(configFilePath); err != nil {
 		return Config{}, sentinel.Wrap(nil, ErrConfigNotFound)
