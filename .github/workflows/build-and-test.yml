@@ -22,5 +22,6 @@ jobs:
         run: make build
       - name: test
         run: |
-          GITHUB_STEP_SUMMARY=$(make test | ./scripts/parse-tests.sh)
+          TEST_OUTPUT=$(make test | ./scripts/parse-tests.sh)
+          echo "$TEST_OUTPUT" > "$GITHUB_STEP_SUMMARY"
           echo "$GITHUB_STEP_SUMMARY"
