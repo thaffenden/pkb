@@ -10,7 +10,8 @@ EXIT_CODE="$?"
 
 if [ "$EXIT_CODE" = 0 ]; then
   echo "# 🎉 tests passed 🎉"
-  SUMMARY=$(echo "$TEST_OUTPUT" | ./parse-tests.sh)
+  echo ""
+  SUMMARY=$(echo "$TEST_OUTPUT" | ./scripts/parse-tests.sh)
   echo "$SUMMARY"
   exit 0
 fi
