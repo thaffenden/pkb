@@ -4,11 +4,7 @@ on:
   push:
     branches-ignore:
       - main
-    paths:
-      - '**.go'
   pull_request:
-    paths:
-      - '**.go'
     permissions:
       contents: read
     types: [opened, reopened]
