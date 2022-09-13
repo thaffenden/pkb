@@ -16,4 +16,7 @@ if [ "$EXIT_CODE" = 0 ]; then
 fi
 
 echo "# 🚩 some tests failed 🚩"
+echo "\`\`\`"
 echo "$TEST_OUTPUT"
+echo "\`\`\`"
+exit 1
