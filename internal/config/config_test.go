@@ -44,7 +44,7 @@ func TestLoad(t *testing.T) {
 				},
 			},
 			xdgConfigDir:  "valid",
-			errorExpected: require.Error,
+			errorExpected: require.NoError,
 		},
 		"tries home directory if XDG_CONFIG_HOME is not set": {
 			conf: config.Config{
