@@ -18,7 +18,7 @@ var rootCmd = &cobra.Command{
 
 // Execute executes the root command.
 func Execute(conf config.Config) error {
-	ctx := context.WithValue(context.Background(), "config", conf)
+	ctx := context.WithValue(context.Background(), config.ContextKey, conf)
 	return rootCmd.ExecuteContext(ctx)
 }
 

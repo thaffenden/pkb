@@ -14,9 +14,8 @@ import (
 	"github.com/thaffenden/pkb/internal/test"
 )
 
+// nolint:paralleltest
 func TestLoad(t *testing.T) {
-	t.Parallel()
-
 	testCases := map[string]struct {
 		conf          config.Config
 		xdgConfigDir  string
@@ -68,8 +67,6 @@ func TestLoad(t *testing.T) {
 		tc := testCase
 
 		t.Run(description, func(t *testing.T) {
-			t.Parallel()
-
 			if tc.xdgConfigDir == "" {
 				if err := os.Setenv("HOME", filepath.FromSlash("testdata/home")); err != nil {
 					log.Fatal(err)
@@ -111,7 +108,7 @@ func TestFromContext(t *testing.T) {
 			ctxFunc: func() context.Context {
 				return context.WithValue(
 					context.Background(),
-					"config",
+					config.ContextKey,
 					config.Config{Editor: "nvim"},
 				)
 			},
@@ -120,22 +117,11 @@ func TestFromContext(t *testing.T) {
 				Editor: "nvim",
 			},
 		},
-		"returns error when no key called config exists on context": {
-			ctxFunc: func() context.Context {
-				return context.WithValue(
-					context.Background(),
-					"foo",
-					[]string{},
-				)
-			},
-			errorExpected: require.Error,
-			expected:      config.Config{},
-		},
 		"returns error when config key is not of type config.Config": {
 			ctxFunc: func() context.Context {
 				return context.WithValue(
 					context.Background(),
-					"config",
+					config.ContextKey,
 					[]string{},
 				)
 			},
