@@ -2,6 +2,8 @@ name: go build and test
 
 on:
   push:
+    branches-ignore:
+      - main
     paths:
       - '**.go'
   pull_request:
@@ -23,7 +25,7 @@ jobs:
       - name: build binary
         run: make build
       - name: test
-        run: make test
+        run: make test-ci
 
   lint:
     runs-on: ubuntu-latest
