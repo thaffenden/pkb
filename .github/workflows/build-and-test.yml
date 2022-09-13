@@ -9,6 +9,8 @@ on:
   pull_request:
     paths:
       - '**.go'
+    permissions:
+      contents: read
     types: [opened, reopened]
 
 anchors:
@@ -27,3 +29,16 @@ jobs:
         run: make build
       - name: test
         run: make test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        name: Set up Go
+        with:
+          go-version: *go-version
+      - uses: golangci/golangci-lint-action@v3
+        name: golangci-lint
+        with:
+          version: latest
