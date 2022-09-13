@@ -9,6 +9,10 @@ build:
 fmt:
 	@go fmt ${DIR}
 
+.PHONY: lint
+lint:
+	@golangci-lint run -v ./...
+
 .PHONY: test
 test:
 	@CGO_ENABLED=1 go test ${DIR} -race -cover
