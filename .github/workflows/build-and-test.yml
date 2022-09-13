@@ -2,8 +2,6 @@ name: go build and test
 
 on:
   push:
-    branches-ignore:
-      - $default-branch
     paths:
       - '**.go'
   pull_request:
