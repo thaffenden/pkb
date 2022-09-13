@@ -18,7 +18,7 @@ func FileFromTemplate(conf config.Config, name string, templates []config.Templa
 
 	// create parent directory if it does not already exist.
 	if _, err := os.Stat(parentDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(parentDir, 0770); err != nil {
+		if err := os.MkdirAll(parentDir, 0o770); err != nil {
 			return fmt.Errorf("error creating file %s", outputPath)
 		}
 	}
@@ -29,7 +29,7 @@ func FileFromTemplate(conf config.Config, name string, templates []config.Templa
 		return err
 	}
 
-	err = ioutil.WriteFile(outputPath, contents, 0644)
+	err = ioutil.WriteFile(outputPath, contents, 0o644)
 	if err != nil {
 		return err
 	}

@@ -54,7 +54,7 @@ func Load() (Config, error) {
 // correct type asserted from the default context interface{} return value.
 func FromContext(ctx context.Context) (Config, error) {
 	conf, ok := ctx.Value("config").(Config)
-	if ok == false {
+	if !ok {
 		return Config{}, errors.New("error getting config from context")
 	}
 

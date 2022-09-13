@@ -3,6 +3,7 @@ package config_test
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"testing"
@@ -14,6 +15,8 @@ import (
 )
 
 func TestLoad(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		conf          config.Config
 		xdgConfigDir  string
@@ -65,14 +68,28 @@ func TestLoad(t *testing.T) {
 		tc := testCase
 
 		t.Run(description, func(t *testing.T) {
+			t.Parallel()
+
 			if tc.xdgConfigDir == "" {
-				os.Setenv("HOME", filepath.FromSlash("testdata/home"))
-				defer os.Unsetenv("HOME")
+				if err := os.Setenv("HOME", filepath.FromSlash("testdata/home")); err != nil {
+					log.Fatal(err)
+				}
+				defer func() {
+					if err := os.Unsetenv("HOME"); err != nil {
+						log.Fatal(err)
+					}
+				}()
 			}
 
 			if tc.xdgConfigDir != "" {
-				os.Setenv("XDG_CONFIG_HOME", filepath.FromSlash(fmt.Sprintf("testdata/xdg/%s", tc.xdgConfigDir)))
-				defer os.Unsetenv("XDG_CONFIG_HOME")
+				if err := os.Setenv("XDG_CONFIG_HOME", filepath.FromSlash(fmt.Sprintf("testdata/xdg/%s", tc.xdgConfigDir))); err != nil {
+					log.Fatal(err)
+				}
+				defer func() {
+					if err := os.Unsetenv("XDG_CONFIG_HOME"); err != nil {
+						log.Fatal(err)
+					}
+				}()
 			}
 
 			conf, err := config.Load()
