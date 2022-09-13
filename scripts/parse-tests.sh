@@ -3,7 +3,7 @@
 # reads from /dev/stdin so you can pipe tests to the script.
 summary=$(cat -)
 
-echo '# Coverage Summary'
+echo '# 📈 Coverage Summary'
 echo ''
 echo '| package | coverage |'
 echo '| --- | --- |'
