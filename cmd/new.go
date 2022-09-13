@@ -7,8 +7,8 @@ import (
 	"github.com/thaffenden/pkb/internal/prompt"
 )
 
-// CmdNew creates the new command "new" used to create new notes.
-func CmdNew() *cobra.Command {
+// CreateNew creates the new command "new" used to create new notes.
+func CreateNew() *cobra.Command {
 	cmd := &cobra.Command{
 		RunE: func(ccmd *cobra.Command, args []string) error {
 			conf, err := config.FromContext(ccmd.Context())

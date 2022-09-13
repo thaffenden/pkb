@@ -3,6 +3,7 @@ package config_test
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"testing"
@@ -13,6 +14,7 @@ import (
 	"github.com/thaffenden/pkb/internal/test"
 )
 
+// nolint:paralleltest
 func TestLoad(t *testing.T) {
 	testCases := map[string]struct {
 		conf          config.Config
@@ -66,13 +68,25 @@ func TestLoad(t *testing.T) {
 
 		t.Run(description, func(t *testing.T) {
 			if tc.xdgConfigDir == "" {
-				os.Setenv("HOME", filepath.FromSlash("testdata/home"))
-				defer os.Unsetenv("HOME")
+				if err := os.Setenv("HOME", filepath.FromSlash("testdata/home")); err != nil {
+					log.Fatal(err)
+				}
+				defer func() {
+					if err := os.Unsetenv("HOME"); err != nil {
+						log.Fatal(err)
+					}
+				}()
 			}
 
 			if tc.xdgConfigDir != "" {
-				os.Setenv("XDG_CONFIG_HOME", filepath.FromSlash(fmt.Sprintf("testdata/xdg/%s", tc.xdgConfigDir)))
-				defer os.Unsetenv("XDG_CONFIG_HOME")
+				if err := os.Setenv("XDG_CONFIG_HOME", filepath.FromSlash(fmt.Sprintf("testdata/xdg/%s", tc.xdgConfigDir))); err != nil {
+					log.Fatal(err)
+				}
+				defer func() {
+					if err := os.Unsetenv("XDG_CONFIG_HOME"); err != nil {
+						log.Fatal(err)
+					}
+				}()
 			}
 
 			conf, err := config.Load()
@@ -94,7 +108,7 @@ func TestFromContext(t *testing.T) {
 			ctxFunc: func() context.Context {
 				return context.WithValue(
 					context.Background(),
-					"config",
+					config.ContextKey,
 					config.Config{Editor: "nvim"},
 				)
 			},
@@ -103,22 +117,11 @@ func TestFromContext(t *testing.T) {
 				Editor: "nvim",
 			},
 		},
-		"returns error when no key called config exists on context": {
-			ctxFunc: func() context.Context {
-				return context.WithValue(
-					context.Background(),
-					"foo",
-					[]string{},
-				)
-			},
-			errorExpected: require.Error,
-			expected:      config.Config{},
-		},
 		"returns error when config key is not of type config.Config": {
 			ctxFunc: func() context.Context {
 				return context.WithValue(
 					context.Background(),
-					"config",
+					config.ContextKey,
 					[]string{},
 				)
 			},

@@ -1,3 +1,5 @@
+// Package editor contains logic for sending commands to or interacting with
+// the editor the user defined in config.
 package editor
 
 import (
@@ -7,6 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Open opens the provided editor in the specified directory.
 func Open(editorCmd string, directory string) error {
 	cmd := exec.Command(editorCmd)
 	cmd.Dir = directory

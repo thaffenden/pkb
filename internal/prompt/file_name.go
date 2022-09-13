@@ -1,3 +1,4 @@
+// Package prompt contains logic for prompts and user interactions with the CLI.
 package prompt
 
 import (
@@ -9,7 +10,7 @@ import (
 )
 
 // EnterFileName prompts the user to enter the name of the file they are going
-// to save a template as, and returns a sanitised
+// to save a template as, and returns a sanitised.
 func EnterFileName() (string, error) {
 	name := ""
 	prompt := &survey.Input{
@@ -24,7 +25,7 @@ func EnterFileName() (string, error) {
 }
 
 // SanitiseFileName removes any spaces or special characters so the format
-// is valid to use as a file name
+// is valid to use as a file name.
 func SanitiseFileName(name string) string {
 	baseName := strings.Trim(name, " ")
 

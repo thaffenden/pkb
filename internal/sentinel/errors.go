@@ -1,3 +1,4 @@
+// Package sentinel provides some utilities for easier use of sentinel errors.
 package sentinel
 
 import (
@@ -6,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// ErrorWrapper wraps the original error.
 type ErrorWrapper interface {
 	OriginalError() error
 }
@@ -25,7 +27,7 @@ func (w wrappedError) Unwrap() error {
 	return w.sentinel
 }
 
-// OriginalError returns the original error
+// OriginalError returns the original error.
 func (w wrappedError) OriginalError() error {
 	return w.original
 }

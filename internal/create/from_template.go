@@ -1,3 +1,4 @@
+// Package create contains logic related to creating files.
 package create
 
 import (
@@ -17,19 +18,18 @@ func FileFromTemplate(conf config.Config, name string, templates []config.Templa
 
 	// create parent directory if it does not already exist.
 	if _, err := os.Stat(parentDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(parentDir, 0770); err != nil {
+		if err := os.MkdirAll(parentDir, 0o750); err != nil {
 			return fmt.Errorf("error creating file %s", outputPath)
 		}
 	}
 
-	templateFile := filepath.Join(filepath.Dir(conf.FilePath), templates[len(templates)-1].File)
+	templateFile := filepath.Clean(filepath.Join(filepath.Dir(conf.FilePath), templates[len(templates)-1].File))
 	contents, err := ioutil.ReadFile(templateFile)
 	if err != nil {
 		return err
 	}
 
-	err = ioutil.WriteFile(outputPath, contents, 0644)
-	if err != nil {
+	if err := ioutil.WriteFile(outputPath, contents, 0o600); err != nil {
 		return err
 	}
 

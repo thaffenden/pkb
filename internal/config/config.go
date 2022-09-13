@@ -1,3 +1,4 @@
+// Package config contains logic related to user config files.
 package config
 
 import (
@@ -9,6 +10,13 @@ import (
 
 	"github.com/thaffenden/pkb/internal/sentinel"
 )
+
+// CtxKey is the type for the config that gets bound to the cobra context
+// so config values can be accessed by cobra commands.
+type CtxKey string
+
+// ContextKey is the key value required to access the cobra command context.
+const ContextKey CtxKey = "config"
 
 type (
 	// Config represents the options defined in the config file.
@@ -28,7 +36,7 @@ func Load() (Config, error) {
 		root = filepath.Join(os.Getenv("HOME"), ".config")
 	}
 
-	configFilePath := filepath.Join(root, "pkb", "config.json")
+	configFilePath := filepath.Clean(filepath.Join(root, "pkb", "config.json"))
 
 	if _, err := os.Stat(configFilePath); err != nil {
 		return Config{}, sentinel.Wrap(nil, ErrConfigNotFound)
@@ -52,8 +60,8 @@ func Load() (Config, error) {
 // FromContext returns the Config struct from the provided context with the
 // correct type asserted from the default context interface{} return value.
 func FromContext(ctx context.Context) (Config, error) {
-	conf, ok := ctx.Value("config").(Config)
-	if ok == false {
+	conf, ok := ctx.Value(ContextKey).(Config)
+	if !ok {
 		return Config{}, errors.New("error getting config from context")
 	}
 

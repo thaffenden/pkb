@@ -1,3 +1,4 @@
+// Package cmd contains the different CLI commands for interactions in pkb.
 package cmd
 
 import (
@@ -17,11 +18,11 @@ var rootCmd = &cobra.Command{
 
 // Execute executes the root command.
 func Execute(conf config.Config) error {
-	ctx := context.WithValue(context.Background(), "config", conf)
+	ctx := context.WithValue(context.Background(), config.ContextKey, conf)
 	return rootCmd.ExecuteContext(ctx)
 }
 
 func init() {
-	rootCmd.AddCommand(CmdNew())
-	rootCmd.AddCommand(CmdEdit())
+	rootCmd.AddCommand(CreateNew())
+	rootCmd.AddCommand(CreateEdit())
 }

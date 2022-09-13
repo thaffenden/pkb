@@ -6,8 +6,8 @@ import (
 	"github.com/thaffenden/pkb/internal/editor"
 )
 
-// CmdEdit creates the new command "edit" used to open your editor to edit existing notes.
-func CmdEdit() *cobra.Command {
+// CreateEdit creates the new command "edit" used to open your editor to edit existing notes.
+func CreateEdit() *cobra.Command {
 	cmd := &cobra.Command{
 		RunE: func(ccmd *cobra.Command, args []string) error {
 			conf, err := config.FromContext(ccmd.Context())
