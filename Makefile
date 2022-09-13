@@ -3,7 +3,7 @@ DIR=./...
 
 .PHONY: build
 build:
-	@CGO_ENABLED=1 go build -o ${BINARY_NAME} .
+	@go build -o ${BINARY_NAME} .
 
 .PHONY: fmt
 fmt:

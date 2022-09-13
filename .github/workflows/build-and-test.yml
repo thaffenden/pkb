@@ -1,0 +1,38 @@
+name: go build and test
+
+on:
+  push:
+    branches-ignore:
+      - $default-branch
+    paths:
+      - '**.go'
+  pull_request:
+    paths:
+      - '**.go'
+    types: [opened, reopened]
+
+anchors:
+  go-version: &go-version 1.18
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: *go-version
+      - name: build binary
+        run: make build
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: *go-version
+      - name: test
+        run: make test
