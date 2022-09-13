@@ -21,7 +21,9 @@ jobs:
       - name: build binary
         run: make build
       - name: test
-        run: make test-ci
+        run: |
+          GITHUB_STEP_SUMMARY=$(make test | ./scripts/parse-tests.sh)
+          echo "$GITHUB_STEP_SUMMARY"
 
   lint:
     runs-on: ubuntu-latest
