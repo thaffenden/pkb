@@ -6,10 +6,8 @@ on:
       - main
     paths:
       - '**.go'
-  pull_request:
     permissions:
       contents: read
-    types: [opened, reopened]
 
 jobs:
   lint:
