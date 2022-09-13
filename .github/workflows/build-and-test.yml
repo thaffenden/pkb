@@ -21,10 +21,4 @@ jobs:
       - name: build binary
         run: make build
       - name: test
-        run: |
-          TEST_OUTPUT=$(make test)
-          echo "$TEST_OUTPUT"
-          SUMMARY=$(echo "$TEST_OUTPUT" | ./scripts/parse-tests.sh)
-          echo "$SUMMARY"
-          echo "$SUMMARY" > "$GITHUB_STEP_SUMMARY"
-          echo "$GITHUB_STEP_SUMMARY"
+        run: ./scripts/run-tests-with-summary.sh > "$GITHUB_STEP_SUMMARY"
