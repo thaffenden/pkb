@@ -1,4 +1,4 @@
-// Package prompt contains logic for user interaction prompts.
+// Package prompt contains logic for prompts and user interactions with the CLI.
 package prompt
 
 import (
@@ -29,20 +29,22 @@ func EnterFileName() (string, error) {
 func SanitiseFileName(name string) string {
 	baseName := strings.Trim(name, " ")
 
-	separators := regexp.MustCompile(`[ &=+:*]`)
-	baseName = separators.ReplaceAllString(baseName, "-")
+	hasExtention := false
+	if strings.HasSuffix(baseName, ".md") {
+		hasExtention = true
+	}
 
-	baseNameSeparators := regexp.MustCompile(`[./]`)
-	baseName = baseNameSeparators.ReplaceAllString(baseName, "-")
+	separators := regexp.MustCompile(`[ &=+:*/]`)
+	baseName = separators.ReplaceAllString(baseName, "-")
 
 	doubleSeparators := regexp.MustCompile(`--`)
 	baseName = doubleSeparators.ReplaceAllString(baseName, "-")
 
 	baseName = strings.Trim(baseName, "-")
 
-	if strings.HasSuffix(baseName, ".md") {
-		return baseName
+	if !hasExtention {
+		return fmt.Sprintf("%s.md", baseName)
 	}
 
-	return fmt.Sprintf("%s.md", baseName)
+	return baseName
 }
