@@ -1,3 +1,4 @@
+// Package prompt contains logic for user interaction prompts.
 package prompt
 
 import (
@@ -9,7 +10,7 @@ import (
 )
 
 // EnterFileName prompts the user to enter the name of the file they are going
-// to save a template as, and returns a sanitised
+// to save a template as, and returns a sanitised.
 func EnterFileName() (string, error) {
 	name := ""
 	prompt := &survey.Input{
@@ -24,26 +25,24 @@ func EnterFileName() (string, error) {
 }
 
 // SanitiseFileName removes any spaces or special characters so the format
-// is valid to use as a file name
+// is valid to use as a file name.
 func SanitiseFileName(name string) string {
 	baseName := strings.Trim(name, " ")
 
-	hasExtention := false
-	if strings.HasSuffix(baseName, ".md") {
-		hasExtention = true
-	}
-
-	separators := regexp.MustCompile(`[ &=+:*/]`)
+	separators := regexp.MustCompile(`[ &=+:*]`)
 	baseName = separators.ReplaceAllString(baseName, "-")
+
+	baseNameSeparators := regexp.MustCompile(`[./]`)
+	baseName = baseNameSeparators.ReplaceAllString(baseName, "-")
 
 	doubleSeparators := regexp.MustCompile(`--`)
 	baseName = doubleSeparators.ReplaceAllString(baseName, "-")
 
 	baseName = strings.Trim(baseName, "-")
 
-	if !hasExtention {
-		return fmt.Sprintf("%s.md", baseName)
+	if strings.HasSuffix(baseName, ".md") {
+		return baseName
 	}
 
-	return baseName
+	return fmt.Sprintf("%s.md", baseName)
 }

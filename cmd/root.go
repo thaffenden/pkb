@@ -1,3 +1,4 @@
+// Package cmd contains the different CLI commands for interactions in pkb.
 package cmd
 
 import (

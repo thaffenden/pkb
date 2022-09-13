@@ -1,3 +1,4 @@
+// Package config contains logic related to user config files.
 package config
 
 import (

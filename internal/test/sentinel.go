@@ -1,3 +1,4 @@
+// Package test provides utilities to help with unit tests.
 package test
 
 import (
