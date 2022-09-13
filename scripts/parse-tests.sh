@@ -1,6 +1,7 @@
 #! /bin/sh
 
-read -r summary
+# reads from /dev/stdin so you can pipe tests to the script.
+summary=$(cat -)
 
 echo '# Coverage Summary'
 echo ''

@@ -16,3 +16,7 @@ lint:
 .PHONY: test
 test:
 	@CGO_ENABLED=1 go test ${DIR} -race -cover
+
+.PHONY: test-ci
+test-ci:
+	@CGO_ENABLED=1 go test ${DIR} -race -cover | ./scripts/parse-tests.sh >> $GITHUB_STEP_SUMMARY
