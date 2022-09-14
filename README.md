@@ -4,6 +4,14 @@
 
 Config driven cli to manage notes and todo items to power a personal knowledge base.
 
+## Expanding values in templates
+
+The following values will be automatically expanded in templates:
+
+- `{{.Name}}` - the name of the created document
+- `{{.Date}}` - the current date in the format YYYY-MM-DD
+- `{{.Time}}` - the time the file was created in the format HH:MM
+
 ## TODO
 
 - [] flesh out README
