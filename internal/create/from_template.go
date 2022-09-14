@@ -41,7 +41,7 @@ func FileFromTemplate(conf config.Config, name string, templates []config.Templa
 		}
 	}()
 
-	if err := RenderTemplate(string(contents), outputPath, file); err != nil {
+	if err := RenderTemplate(string(contents), name, file); err != nil {
 		return "", err
 	}
 
@@ -59,7 +59,7 @@ func OutputPath(rootDir string, fileName string, templates []config.Template) st
 		output = append(output, config.OutputDir)
 	}
 
-	output = append(output, fileName)
+	output = append(output, SanitiseFileName(fileName))
 
 	return filepath.Join(output...)
 }

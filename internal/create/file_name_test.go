@@ -1,10 +1,10 @@
-package prompt_test
+package create_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/thaffenden/pkb/internal/prompt"
+	"github.com/thaffenden/pkb/internal/create"
 )
 
 func TestSanitiseFileName(t *testing.T) {
@@ -42,7 +42,7 @@ func TestSanitiseFileName(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			actual := prompt.SanitiseFileName(tc.input)
+			actual := create.SanitiseFileName(tc.input)
 			assert.Equal(t, tc.expected, actual)
 		})
 	}
