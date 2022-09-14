@@ -4,6 +4,7 @@ package create
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -19,7 +20,7 @@ func FileFromTemplate(conf config.Config, name string, templates []config.Templa
 	// create parent directory if it does not already exist.
 	if _, err := os.Stat(parentDir); os.IsNotExist(err) {
 		if err := os.MkdirAll(parentDir, 0o750); err != nil {
-			return "", fmt.Errorf("error creating file %s", outputPath)
+			return "", fmt.Errorf("error creating parent directory %s for file %s", parentDir, outputPath)
 		}
 	}
 
@@ -29,7 +30,18 @@ func FileFromTemplate(conf config.Config, name string, templates []config.Templa
 		return "", err
 	}
 
-	if err := ioutil.WriteFile(outputPath, contents, 0o600); err != nil {
+	file, err := os.Create(filepath.Clean(outputPath))
+	if err != nil {
+		return "", err
+	}
+
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	if err := RenderTemplate(string(contents), outputPath, file); err != nil {
 		return "", err
 	}
 
