@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/thaffenden/pkb/internal/config"
 	"github.com/thaffenden/pkb/internal/create"
+	"github.com/thaffenden/pkb/internal/editor"
 	"github.com/thaffenden/pkb/internal/prompt"
 )
 
@@ -29,8 +30,12 @@ func CreateNew() *cobra.Command {
 				return err
 			}
 
-			err = create.FileFromTemplate(conf, fileName, selected)
+			createdFile, err := create.FileFromTemplate(conf, fileName, selected)
 			if err != nil {
+				return err
+			}
+
+			if err := editor.OpenFile(conf.Editor, conf.Directory, createdFile); err != nil {
 				return err
 			}
 
