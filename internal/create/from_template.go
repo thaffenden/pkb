@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/thaffenden/pkb/internal/config"
+	"github.com/thaffenden/pkb/internal/date"
 )
 
 // TemplateRenderer holds the config required to render and save the template.
@@ -93,9 +94,19 @@ func (t TemplateRenderer) Render(content string, writer io.Writer) error {
 		Time: now.Format("15:04"),
 	}
 
-	// if SelectedTemplate has custom date add to struct.
+	// If a custom date format is specified on the template config run it through
+	// the date utils to better support human friendly output.
 	if t.SelectedTemplate.CustomDateFormat != "" {
 		config.CustomDateFormat = now.Format(t.SelectedTemplate.CustomDateFormat)
+
+		if date.IncludesSuffixFormat(config.CustomDateFormat) {
+			fixedDate, err := date.ReplaceSuffixFormatter(config.CustomDateFormat)
+			if err != nil {
+				return err
+			}
+
+			config.CustomDateFormat = fixedDate
+		}
 	}
 
 	tpl, err := template.New("template").Parse(content)
