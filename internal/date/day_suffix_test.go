@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/thaffenden/pkb/internal/date"
 )
 
@@ -16,31 +17,31 @@ func TestDaySuffix(t *testing.T) {
 	}{
 		"1st": {
 			day:      1,
-			expected: "1st",
+			expected: "st",
 		},
 		"3rd": {
 			day:      3,
-			expected: "3rd",
+			expected: "rd",
 		},
 		"11th": {
 			day:      11,
-			expected: "11th",
+			expected: "th",
 		},
 		"12th": {
 			day:      12,
-			expected: "12th",
+			expected: "th",
 		},
 		"13th": {
 			day:      13,
-			expected: "13th",
+			expected: "th",
 		},
 		"21st": {
 			day:      21,
-			expected: "21st",
+			expected: "st",
 		},
 		"23rd": {
 			day:      23,
-			expected: "23rd",
+			expected: "rd",
 		},
 	}
 
@@ -96,6 +97,34 @@ func TestIncludesSuffixFormat(t *testing.T) {
 			t.Parallel()
 
 			actual := date.IncludesSuffixFormat(tc.input)
+			assert.Equal(t, tc.expected, actual)
+		})
+	}
+}
+
+func TestReplaceSuffixFormatter(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		input       string
+		expected    string
+		assertError require.ErrorAssertionFunc
+	}{
+		"converts format string with incorrect suffix": {
+			input:       "Monday 1th Nov",
+			expected:    "Monday 1st Nov",
+			assertError: require.NoError,
+		},
+	}
+
+	for name, testCase := range testCases {
+		tc := testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			actual, err := date.ReplaceSuffixFormatter(tc.input)
+			tc.assertError(t, err)
 			assert.Equal(t, tc.expected, actual)
 		})
 	}
