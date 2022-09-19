@@ -115,6 +115,16 @@ func TestReplaceSuffixFormatter(t *testing.T) {
 			expected:    "Monday 1st Nov",
 			assertError: require.NoError,
 		},
+		"leaves correctly formatted string as is": {
+			input:       "Monday 2nd Nov",
+			expected:    "Monday 2nd Nov",
+			assertError: require.NoError,
+		},
+		"returns error when day can't be extracted": {
+			input:       "Monday Nov",
+			expected:    "",
+			assertError: require.Error,
+		},
 	}
 
 	for name, testCase := range testCases {
