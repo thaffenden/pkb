@@ -30,7 +30,8 @@ func CreateNew() *cobra.Command {
 				return err
 			}
 
-			createdFile, err := create.FileFromTemplate(conf, fileName, selected)
+			renderer := create.NewTemplateRenderer(conf, fileName, selected)
+			createdFile, err := renderer.CreateAndSaveFile()
 			if err != nil {
 				return err
 			}
