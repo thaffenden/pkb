@@ -1,9 +1,12 @@
 package create_test
 
 import (
+	"bytes"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/thaffenden/pkb/internal/config"
 	"github.com/thaffenden/pkb/internal/create"
 )
@@ -57,6 +60,47 @@ func TestOutputPath(t *testing.T) {
 
 			actual := create.OutputPath(tc.rootDir, tc.name, tc.templates)
 			assert.Equal(t, tc.expected, actual)
+		})
+	}
+}
+
+func TestRender(t *testing.T) {
+	t.Parallel()
+
+	testTime, _ := time.Parse(time.RFC3339, "2022-09-19T16:20:00Z")
+
+	testCases := map[string]struct {
+		renderer        create.TemplateRenderer
+		templateContent string
+		expected        string
+		assertError     require.ErrorAssertionFunc
+	}{
+		"expands expected variables": {
+			renderer: create.TemplateRenderer{
+				Config: config.Config{
+					FilePath:  "example.tpl.md",
+					Templates: map[string]config.Template{},
+				},
+				Name: "example doc",
+				Time: testTime,
+			},
+			templateContent: "{{.Date}}\n{{.Name}}\n{{.Time}}",
+			expected:        "2022-09-19\nexample doc\n16:20",
+			assertError:     require.NoError,
+		},
+	}
+
+	for name, testCase := range testCases {
+		tc := testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			var actual bytes.Buffer
+			err := tc.renderer.Render(tc.templateContent, &actual)
+			tc.assertError(t, err)
+
+			assert.Equal(t, tc.expected, actual.String())
 		})
 	}
 }

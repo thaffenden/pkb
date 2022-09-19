@@ -8,8 +8,8 @@ Config driven cli to manage notes and todo items to power a personal knowledge b
 
 The following values will be automatically expanded in templates:
 
-- `{{.Name}}` - the name of the created document
 - `{{.Date}}` - the current date in the format YYYY-MM-DD
+- `{{.Name}}` - the name of the created document
 - `{{.Time}}` - the time the file was created in the format HH:MM
 
 ## TODO
