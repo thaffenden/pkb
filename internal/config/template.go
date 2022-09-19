@@ -10,9 +10,10 @@ type Templates map[string]Template
 // Template represents the config options for a custom template file used
 // for template and sub templates.
 type Template struct {
-	File         string    `json:"file"`
-	OutputDir    string    `json:"output_dir"`
-	SubTemplates Templates `json:"sub_templates,omitempty"`
+	CustomDateFormat string    `json:"custom_date_format,omitempty"`
+	File             string    `json:"file"`
+	OutputDir        string    `json:"output_dir"`
+	SubTemplates     Templates `json:"sub_templates,omitempty"`
 }
 
 // HasSubTemplates checks if the Template struct has sub templates.

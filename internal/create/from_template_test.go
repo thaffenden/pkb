@@ -82,10 +82,13 @@ func TestRender(t *testing.T) {
 					Templates: map[string]config.Template{},
 				},
 				Name: "example doc",
+				SelectedTemplate: config.Template{
+					CustomDateFormat: "Monday 2nd January",
+				},
 				Time: testTime,
 			},
-			templateContent: "{{.Date}}\n{{.Name}}\n{{.Time}}",
-			expected:        "2022-09-19\nexample doc\n16:20",
+			templateContent: "{{.Date}}\n{{.Name}}\n{{.Time}}\n{{.CustomDateFormat}}",
+			expected:        "2022-09-19\nexample doc\n16:20\nMonday 19th September",
 			assertError:     require.NoError,
 		},
 	}

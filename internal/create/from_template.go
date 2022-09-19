@@ -16,17 +16,19 @@ import (
 
 // TemplateRenderer holds the config required to render and save the template.
 type TemplateRenderer struct {
-	Config    config.Config
-	Name      string
-	Time      time.Time
-	Templates []config.Template
+	Config           config.Config
+	Name             string
+	SelectedTemplate config.Template
+	Time             time.Time
+	Templates        []config.Template
 }
 
 // templateVariables are the variables that are expanded when rendering the template.
 type templateVariables struct {
-	Name string
-	Date string
-	Time string
+	CustomDateFormat string
+	Date             string
+	Name             string
+	Time             string
 }
 
 // NewTemplateRenderer creates a new instance of the TemplateRenderer.
@@ -48,10 +50,12 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 		return "", err
 	}
 
+	t.SelectedTemplate = t.Templates[len(t.Templates)-1]
+
 	templateFile := filepath.Clean(
 		filepath.Join(
 			filepath.Dir(t.Config.FilePath),
-			t.Templates[len(t.Templates)-1].File,
+			t.SelectedTemplate.File,
 		),
 	)
 	contents, err := ioutil.ReadFile(templateFile)
@@ -87,6 +91,11 @@ func (t TemplateRenderer) Render(content string, writer io.Writer) error {
 		Name: t.Name,
 		Date: now.Format("2006-01-02"),
 		Time: now.Format("15:04"),
+	}
+
+	// if SelectedTemplate has custom date add to struct.
+	if t.SelectedTemplate.CustomDateFormat != "" {
+		config.CustomDateFormat = now.Format(t.SelectedTemplate.CustomDateFormat)
 	}
 
 	tpl, err := template.New("template").Parse(content)

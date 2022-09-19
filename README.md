@@ -8,6 +8,10 @@ Config driven cli to manage notes and todo items to power a personal knowledge b
 
 The following values will be automatically expanded in templates:
 
+- `{{.CustomDateFormat}}` - the current date in a custom format specified in the
+template config. This must be a valid golang date format, with the exception
+of day suffixes (e.g. 1st, 3rd etc). If your format contains a day suffix this
+will be be handled so the suffix is correct displayed.
 - `{{.Date}}` - the current date in the format YYYY-MM-DD
 - `{{.Name}}` - the name of the created document
 - `{{.Time}}` - the time the file was created in the format HH:MM
