@@ -25,12 +25,7 @@ func CreateNew() *cobra.Command {
 				return err
 			}
 
-			fileName, err := prompt.EnterFileName()
-			if err != nil {
-				return err
-			}
-
-			renderer := create.NewTemplateRenderer(conf, fileName, selected)
+			renderer := create.NewTemplateRenderer(conf, selected)
 			createdFile, err := renderer.CreateAndSaveFile()
 			if err != nil {
 				return err

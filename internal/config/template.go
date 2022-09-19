@@ -12,6 +12,7 @@ type Templates map[string]Template
 type Template struct {
 	CustomDateFormat string    `json:"custom_date_format,omitempty"`
 	File             string    `json:"file"`
+	NameFormat       string    `json:"name_format,omitempty"`
 	OutputDir        string    `json:"output_dir"`
 	SubTemplates     Templates `json:"sub_templates,omitempty"`
 }

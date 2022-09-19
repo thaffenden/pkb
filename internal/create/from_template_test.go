@@ -11,6 +11,51 @@ import (
 	"github.com/thaffenden/pkb/internal/create"
 )
 
+func TestGetFileName(t *testing.T) {
+	t.Parallel()
+
+	testTime, _ := time.Parse(time.RFC3339, "2022-09-19T16:20:00Z")
+
+	testCases := map[string]struct {
+		renderer    create.TemplateRenderer
+		promptFunc  func() (string, error)
+		expected    string
+		assertError require.ErrorAssertionFunc
+	}{
+		"uses prompt when no value in config": {
+			renderer: create.TemplateRenderer{Templates: []config.Template{{}}},
+			promptFunc: func() (string, error) {
+				return "prompted for this string", nil
+			},
+			expected:    "prompted for this string",
+			assertError: require.NoError,
+		},
+		"combines values when mutiple provided": {
+			renderer: create.TemplateRenderer{
+				SelectedTemplate: config.Template{NameFormat: "DATE-PROMPT"},
+				Time:             testTime,
+			},
+			promptFunc: func() (string, error) {
+				return "wow this is great", nil
+			},
+			expected:    "2022-09-19-wow this is great",
+			assertError: require.NoError,
+		},
+	}
+
+	for name, testCase := range testCases {
+		tc := testCase
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			actual, err := tc.renderer.GetFileName(tc.promptFunc)
+			tc.assertError(t, err)
+			assert.Equal(t, tc.expected, actual)
+		})
+	}
+}
+
 func TestOutputPath(t *testing.T) {
 	t.Parallel()
 
