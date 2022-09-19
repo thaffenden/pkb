@@ -12,6 +12,7 @@
       "sub_templates": {
         "back-end": {
           "file": "interview.back-end.tpl.md",
+          "custom_date_format": "Monday 2nd January",
           "output_dir": "back-end"
         },
         "front-end": {
