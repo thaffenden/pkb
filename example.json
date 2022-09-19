@@ -2,9 +2,10 @@
   "directory": "/home/tristan/notes",
   "editor": "nvim",
   "templates": {
-    "default": {
-      "file": "default.tpl.md",
-      "output_dir": "misc"
+    "daily": {
+      "file": "daily.tpl.md",
+      "name_format": "DATE",
+      "output_dir": "daily"
     },
     "interview": {
       "file": "interview.tpl.md",

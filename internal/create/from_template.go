@@ -8,11 +8,13 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"text/template"
 	"time"
 
 	"github.com/thaffenden/pkb/internal/config"
 	"github.com/thaffenden/pkb/internal/date"
+	"github.com/thaffenden/pkb/internal/prompt"
 )
 
 // TemplateRenderer holds the config required to render and save the template.
@@ -33,10 +35,9 @@ type templateVariables struct {
 }
 
 // NewTemplateRenderer creates a new instance of the TemplateRenderer.
-func NewTemplateRenderer(conf config.Config, name string, templates []config.Template) TemplateRenderer {
+func NewTemplateRenderer(conf config.Config, templates []config.Template) TemplateRenderer {
 	return TemplateRenderer{
 		Config:    conf,
-		Name:      name,
 		Time:      time.Now(),
 		Templates: templates,
 	}
@@ -45,13 +46,20 @@ func NewTemplateRenderer(conf config.Config, name string, templates []config.Tem
 // CreateAndSaveFile creates the required file from the provided template
 // and saves it in the correct output directory.
 func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
+	t.SelectedTemplate = t.Templates[len(t.Templates)-1]
+
+	fileName, err := t.GetFileName(prompt.EnterFileName)
+	if err != nil {
+		return "", err
+	}
+
+	t.Name = fileName
+
 	outputPath := OutputPath(t.Config.Directory, t.Name, t.Templates)
 
 	if err := createParentDirectories(outputPath); err != nil {
 		return "", err
 	}
-
-	t.SelectedTemplate = t.Templates[len(t.Templates)-1]
 
 	templateFile := filepath.Clean(
 		filepath.Join(
@@ -82,6 +90,31 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 	fmt.Printf("output file created: %s\n", outputPath)
 
 	return outputPath, nil
+}
+
+// GetFileName either prompts the user for input or uses one of the supported
+// name specifiers to automatically set the date.
+func (t TemplateRenderer) GetFileName(promptFunc func() (string, error)) (string, error) {
+	if t.SelectedTemplate.NameFormat == "" {
+		return promptFunc()
+	}
+
+	outputString := t.SelectedTemplate.NameFormat
+
+	if strings.Contains(outputString, "DATE") {
+		outputString = strings.ReplaceAll(outputString, "DATE", t.Time.Format("2006-01-02"))
+	}
+
+	if strings.Contains(outputString, "PROMPT") {
+		promptString, err := promptFunc()
+		if err != nil {
+			return "", err
+		}
+
+		outputString = strings.ReplaceAll(outputString, "PROMPT", promptString)
+	}
+
+	return outputString, nil
 }
 
 // Render reads the template content and expands any variables.
