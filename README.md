@@ -17,6 +17,25 @@ to be included in the template config to be able to use a custom date format.
 - `{{.Name}}` - the name of the created document
 - `{{.Time}}` - the time the file was created in the format HH:MM
 
+## Custom name formats
+
+By default when you create a new file from a template you will be prompted to
+enter the name value, however you can customise with `name_format`.
+
+The following values are currently supported:
+
+- `{{.Date}}` - the current date in the format YYYY-MM-DD
+- `{{.Prompt}}` - prompt for user input
+
+You can combine the supported formats to use them both, e.g.:
+
+```json
+"name_format": "{{.Date}}-{{.Prompt}}"
+```
+
+In this example the document would be created with the current date then the
+value you typed in the prompt, e.g. `2022-09-19-typed-value.md`.
+
 ## TODO
 
 - [] flesh out README
