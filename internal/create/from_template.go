@@ -3,37 +3,120 @@ package create
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
+	"text/template"
+	"time"
 
 	"github.com/thaffenden/pkb/internal/config"
+	"github.com/thaffenden/pkb/internal/date"
 )
 
-// FileFromTemplate creates the document as per the template config.
-func FileFromTemplate(conf config.Config, name string, templates []config.Template) error {
-	outputPath := OutputPath(conf.Directory, name, templates)
+// TemplateRenderer holds the config required to render and save the template.
+type TemplateRenderer struct {
+	Config           config.Config
+	Name             string
+	SelectedTemplate config.Template
+	Time             time.Time
+	Templates        []config.Template
+}
 
-	parentDir := filepath.Dir(outputPath)
+// templateVariables are the variables that are expanded when rendering the template.
+type templateVariables struct {
+	CustomDateFormat string
+	Date             string
+	Name             string
+	Time             string
+}
 
-	// create parent directory if it does not already exist.
-	if _, err := os.Stat(parentDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(parentDir, 0o750); err != nil {
-			return fmt.Errorf("error creating file %s", outputPath)
+// NewTemplateRenderer creates a new instance of the TemplateRenderer.
+func NewTemplateRenderer(conf config.Config, name string, templates []config.Template) TemplateRenderer {
+	return TemplateRenderer{
+		Config:    conf,
+		Name:      name,
+		Time:      time.Now(),
+		Templates: templates,
+	}
+}
+
+// CreateAndSaveFile creates the required file from the provided template
+// and saves it in the correct output directory.
+func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
+	outputPath := OutputPath(t.Config.Directory, t.Name, t.Templates)
+
+	if err := createParentDirectories(outputPath); err != nil {
+		return "", err
+	}
+
+	t.SelectedTemplate = t.Templates[len(t.Templates)-1]
+
+	templateFile := filepath.Clean(
+		filepath.Join(
+			filepath.Dir(t.Config.FilePath),
+			t.SelectedTemplate.File,
+		),
+	)
+	contents, err := ioutil.ReadFile(templateFile)
+	if err != nil {
+		return "", err
+	}
+
+	file, err := os.Create(filepath.Clean(outputPath))
+	if err != nil {
+		return "", err
+	}
+
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Fatalf("error closing created file: %s", err)
+		}
+	}()
+
+	if err := t.Render(string(contents), file); err != nil {
+		return "", err
+	}
+
+	fmt.Printf("output file created: %s\n", outputPath)
+
+	return outputPath, nil
+}
+
+// Render reads the template content and expands any variables.
+func (t TemplateRenderer) Render(content string, writer io.Writer) error {
+	now := t.Time
+
+	config := templateVariables{
+		Name: t.Name,
+		Date: now.Format("2006-01-02"),
+		Time: now.Format("15:04"),
+	}
+
+	// If a custom date format is specified on the template config run it through
+	// the date utils to better support human friendly output.
+	if t.SelectedTemplate.CustomDateFormat != "" {
+		config.CustomDateFormat = now.Format(t.SelectedTemplate.CustomDateFormat)
+
+		if date.IncludesSuffixFormat(config.CustomDateFormat) {
+			fixedDate, err := date.ReplaceSuffixFormatter(config.CustomDateFormat)
+			if err != nil {
+				return err
+			}
+
+			config.CustomDateFormat = fixedDate
 		}
 	}
 
-	templateFile := filepath.Clean(filepath.Join(filepath.Dir(conf.FilePath), templates[len(templates)-1].File))
-	contents, err := ioutil.ReadFile(templateFile)
+	tpl, err := template.New("template").Parse(content)
 	if err != nil {
 		return err
 	}
 
-	if err := ioutil.WriteFile(outputPath, contents, 0o600); err != nil {
+	if err := tpl.Execute(writer, config); err != nil {
 		return err
 	}
-
-	fmt.Printf("output file created: %s\n", outputPath)
 
 	return nil
 }
@@ -47,7 +130,21 @@ func OutputPath(rootDir string, fileName string, templates []config.Template) st
 		output = append(output, config.OutputDir)
 	}
 
-	output = append(output, fileName)
+	output = append(output, SanitiseFileName(fileName))
 
 	return filepath.Join(output...)
+}
+
+// createParentDirectories creates the parent directories for the rendered file
+// if they don't already exist.
+func createParentDirectories(outputPath string) error {
+	parentDir := filepath.Dir(outputPath)
+
+	if _, err := os.Stat(parentDir); os.IsNotExist(err) {
+		if err := os.MkdirAll(parentDir, 0o750); err != nil {
+			return fmt.Errorf("error creating parent directory %s for file %s", parentDir, outputPath)
+		}
+	}
+
+	return nil
 }
