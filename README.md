@@ -24,4 +24,3 @@ will be be handled so the suffix is correct displayed.
 - [] add unit tests for actual file creation
 - [] add some actual end user tests using demo config
 - [] add logic to check for updates when running
-- [] add templating expansion for common values (date, tags, etc)
