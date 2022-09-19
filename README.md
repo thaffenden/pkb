@@ -24,13 +24,13 @@ enter the name value, however you can customise with `name_format`.
 
 The following values are currently supported:
 
-- `{{.Date}}` - the current date in the format YYYY-MM-DD
-- `{{.Prompt}}` - prompt for user input
+- `DATE` - the current date in the format YYYY-MM-DD
+- `PROMPT` - prompt for user input
 
 You can combine the supported formats to use them both, e.g.:
 
 ```json
-"name_format": "{{.Date}}-{{.Prompt}}"
+"name_format": "DATE-PROMPT"
 ```
 
 In this example the document would be created with the current date then the

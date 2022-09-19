@@ -4,7 +4,7 @@
   "templates": {
     "daily": {
       "file": "daily.tpl.md",
-      "name_format": "{{.Date}}",
+      "name_format": "DATE",
       "output_dir": "daily"
     },
     "interview": {
