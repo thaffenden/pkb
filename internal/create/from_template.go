@@ -52,13 +52,6 @@ func NewTemplateRenderer(conf config.Config, templates []config.Template) Templa
 func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 	t.SelectedTemplate = t.Templates[len(t.Templates)-1]
 
-	fileName, err := t.GetFileName()
-	if err != nil {
-		return "", err
-	}
-
-	t.Name = fileName
-
 	outputPath, err := t.OutputPath()
 	if err != nil {
 		return "", err
@@ -164,7 +157,7 @@ func (t TemplateRenderer) Render(content string, writer io.Writer) error {
 // OutputPath walks the sub template config to get build the full output path
 // handling any nested sub templates and prompts or selections for output
 // directories.
-func (t TemplateRenderer) OutputPath() (string, error) {
+func (t *TemplateRenderer) OutputPath() (string, error) {
 	output := []string{t.Config.Directory}
 
 	for _, config := range t.Templates {
@@ -179,7 +172,16 @@ func (t TemplateRenderer) OutputPath() (string, error) {
 			}
 		}
 
-		output = append(output, outputDir)
+		output = append(output, SanitiseDirPath(outputDir))
+	}
+
+	if t.Name == "" {
+		fileName, err := t.GetFileName()
+		if err != nil {
+			return "", err
+		}
+
+		t.Name = fileName
 	}
 
 	output = append(output, SanitiseFileName(t.Name))
