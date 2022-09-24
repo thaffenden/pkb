@@ -34,5 +34,5 @@ func (t Template) HasSubTemplates() bool {
 
 // isEmpty checks if the config for the template object is empty.
 func (t Template) isEmpty() bool {
-	return t.File == ""
+	return t.File == "" && len(t.SubTemplates) == 0
 }

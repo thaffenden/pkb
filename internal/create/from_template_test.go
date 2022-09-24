@@ -61,11 +61,11 @@ func TestOutputPath(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		expected         string
 		templateRenderer create.TemplateRenderer
+		assertError      require.ErrorAssertionFunc
+		expected         string
 	}{
 		"returns path for single template": {
-			expected: "/home/username/notes/magic/simple.md",
 			templateRenderer: create.TemplateRenderer{
 				Config: config.Config{
 					Directory: "/home/username/notes",
@@ -78,9 +78,10 @@ func TestOutputPath(t *testing.T) {
 					},
 				},
 			},
+			assertError: require.NoError,
+			expected:    "/home/username/notes/magic/simple.md",
 		},
 		"creates full nested dir path when there are subtemplates": {
-			expected: "/home/username/notes/foo/bar/wow/nested-example.md",
 			templateRenderer: create.TemplateRenderer{
 				Config: config.Config{
 					Directory: "/home/username/notes",
@@ -101,6 +102,27 @@ func TestOutputPath(t *testing.T) {
 					},
 				},
 			},
+			assertError: require.NoError,
+			expected:    "/home/username/notes/foo/bar/wow/nested-example.md",
+		},
+		"prompts user for directory input when specified in template config": {
+			templateRenderer: create.TemplateRenderer{
+				Config: config.Config{
+					Directory: "/home/username/notes",
+				},
+				Name: "simple.md",
+				DirectoryPrompt: func() (string, error) {
+					return "foo/dir", nil
+				},
+				Templates: []config.Template{
+					{
+						File:      "magic.tpl.md",
+						OutputDir: "{{Prompt}}",
+					},
+				},
+			},
+			assertError: require.NoError,
+			expected:    "/home/username/notes/foo/dir/simple.md",
 		},
 	}
 
@@ -110,7 +132,8 @@ func TestOutputPath(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			actual := tc.templateRenderer.OutputPath()
+			actual, err := tc.templateRenderer.OutputPath()
+			tc.assertError(t, err)
 			assert.Equal(t, tc.expected, actual)
 		})
 	}

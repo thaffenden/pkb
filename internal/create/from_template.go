@@ -59,7 +59,10 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 
 	t.Name = fileName
 
-	outputPath := t.OutputPath()
+	outputPath, err := t.OutputPath()
+	if err != nil {
+		return "", err
+	}
 
 	if err := createParentDirectories(outputPath); err != nil {
 		return "", err
@@ -161,16 +164,27 @@ func (t TemplateRenderer) Render(content string, writer io.Writer) error {
 // OutputPath walks the sub template config to get build the full output path
 // handling any nested sub templates and prompts or selections for output
 // directories.
-func (t TemplateRenderer) OutputPath() string {
+func (t TemplateRenderer) OutputPath() (string, error) {
 	output := []string{t.Config.Directory}
 
 	for _, config := range t.Templates {
-		output = append(output, config.OutputDir)
+		outputDir := config.OutputDir
+
+		if config.OutputDir == "{{Prompt}}" {
+			var err error
+
+			outputDir, err = t.DirectoryPrompt()
+			if err != nil {
+				return "", err
+			}
+		}
+
+		output = append(output, outputDir)
 	}
 
 	output = append(output, SanitiseFileName(t.Name))
 
-	return filepath.Join(output...)
+	return filepath.Join(output...), nil
 }
 
 // createParentDirectories creates the parent directories for the rendered file
