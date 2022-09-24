@@ -18,25 +18,26 @@ func TestGetFileName(t *testing.T) {
 
 	testCases := map[string]struct {
 		renderer    create.TemplateRenderer
-		promptFunc  func() (string, error)
 		expected    string
 		assertError require.ErrorAssertionFunc
 	}{
 		"uses prompt when no value in config": {
-			renderer: create.TemplateRenderer{Templates: []config.Template{{}}},
-			promptFunc: func() (string, error) {
-				return "prompted for this string", nil
+			renderer: create.TemplateRenderer{
+				NamePrompt: func() (string, error) {
+					return "prompted for this string", nil
+				},
+				Templates: []config.Template{{}},
 			},
 			expected:    "prompted for this string",
 			assertError: require.NoError,
 		},
 		"combines values when mutiple provided": {
 			renderer: create.TemplateRenderer{
+				NamePrompt: func() (string, error) {
+					return "wow this is great", nil
+				},
 				SelectedTemplate: config.Template{NameFormat: "DATE-PROMPT"},
 				Time:             testTime,
-			},
-			promptFunc: func() (string, error) {
-				return "wow this is great", nil
 			},
 			expected:    "2022-09-19-wow this is great",
 			assertError: require.NoError,
@@ -49,7 +50,7 @@ func TestGetFileName(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			actual, err := tc.renderer.GetFileName(tc.promptFunc)
+			actual, err := tc.renderer.GetFileName()
 			tc.assertError(t, err)
 			assert.Equal(t, tc.expected, actual)
 		})

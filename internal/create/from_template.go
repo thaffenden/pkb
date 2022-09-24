@@ -20,7 +20,9 @@ import (
 // TemplateRenderer holds the config required to render and save the template.
 type TemplateRenderer struct {
 	Config           config.Config
+	DirectoryPrompt  func() (string, error)
 	Name             string
+	NamePrompt       func() (string, error)
 	SelectedTemplate config.Template
 	Time             time.Time
 	Templates        []config.Template
@@ -37,9 +39,11 @@ type templateVariables struct {
 // NewTemplateRenderer creates a new instance of the TemplateRenderer.
 func NewTemplateRenderer(conf config.Config, templates []config.Template) TemplateRenderer {
 	return TemplateRenderer{
-		Config:    conf,
-		Time:      time.Now(),
-		Templates: templates,
+		Config:          conf,
+		DirectoryPrompt: prompt.EnterDirectory,
+		NamePrompt:      prompt.EnterFileName,
+		Time:            time.Now(),
+		Templates:       templates,
 	}
 }
 
@@ -48,7 +52,7 @@ func NewTemplateRenderer(conf config.Config, templates []config.Template) Templa
 func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 	t.SelectedTemplate = t.Templates[len(t.Templates)-1]
 
-	fileName, err := t.GetFileName(prompt.EnterFileName)
+	fileName, err := t.GetFileName()
 	if err != nil {
 		return "", err
 	}
@@ -94,9 +98,9 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 
 // GetFileName either prompts the user for input or uses one of the supported
 // name specifiers to automatically set the date.
-func (t TemplateRenderer) GetFileName(promptFunc func() (string, error)) (string, error) {
+func (t TemplateRenderer) GetFileName() (string, error) {
 	if t.SelectedTemplate.NameFormat == "" {
-		return promptFunc()
+		return t.NamePrompt()
 	}
 
 	outputString := t.SelectedTemplate.NameFormat
@@ -106,7 +110,7 @@ func (t TemplateRenderer) GetFileName(promptFunc func() (string, error)) (string
 	}
 
 	if strings.Contains(outputString, "PROMPT") {
-		promptString, err := promptFunc()
+		promptString, err := t.NamePrompt()
 		if err != nil {
 			return "", err
 		}
