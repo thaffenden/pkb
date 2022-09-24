@@ -61,40 +61,46 @@ func TestOutputPath(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		name      string
-		rootDir   string
-		templates []config.Template
-		expected  string
+		expected         string
+		templateRenderer create.TemplateRenderer
 	}{
 		"returns path for single template": {
-			name:    "simple.md",
-			rootDir: "/home/username/notes",
-			templates: []config.Template{
-				{
-					File:      "magic.tpl.md",
-					OutputDir: "magic",
+			expected: "/home/username/notes/magic/simple.md",
+			templateRenderer: create.TemplateRenderer{
+				Config: config.Config{
+					Directory: "/home/username/notes",
+				},
+				Name: "simple.md",
+				Templates: []config.Template{
+					{
+						File:      "magic.tpl.md",
+						OutputDir: "magic",
+					},
 				},
 			},
-			expected: "/home/username/notes/magic/simple.md",
 		},
 		"creates full nested dir path when there are subtemplates": {
-			name:    "nested-example.md",
-			rootDir: "/home/username/notes",
-			templates: []config.Template{
-				{
-					File:      "foo.tpl.md",
-					OutputDir: "foo",
+			expected: "/home/username/notes/foo/bar/wow/nested-example.md",
+			templateRenderer: create.TemplateRenderer{
+				Config: config.Config{
+					Directory: "/home/username/notes",
 				},
-				{
-					File:      "bar.tpl.md",
-					OutputDir: "bar",
-				},
-				{
-					File:      "wow.tpl.md",
-					OutputDir: "wow",
+				Name: "nested-example.md",
+				Templates: []config.Template{
+					{
+						File:      "foo.tpl.md",
+						OutputDir: "foo",
+					},
+					{
+						File:      "bar.tpl.md",
+						OutputDir: "bar",
+					},
+					{
+						File:      "wow.tpl.md",
+						OutputDir: "wow",
+					},
 				},
 			},
-			expected: "/home/username/notes/foo/bar/wow/nested-example.md",
 		},
 	}
 
@@ -104,7 +110,7 @@ func TestOutputPath(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			actual := create.OutputPath(tc.rootDir, tc.name, tc.templates)
+			actual := tc.templateRenderer.OutputPath()
 			assert.Equal(t, tc.expected, actual)
 		})
 	}
