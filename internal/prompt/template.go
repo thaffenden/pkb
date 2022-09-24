@@ -42,6 +42,13 @@ func (t TemplateSelector) SelectTemplateWithSubTemplates(
 		return selectedTemplates, nil
 	}
 
+	// If there is only one sub template use that by default, so the user is not
+	// given a prompt with only a single value.
+	if selected.GetNumberOfSubTemplates() == 1 {
+		selectedTemplates = append(selectedTemplates, selected.SubTemplates.First())
+		return selectedTemplates, nil
+	}
+
 	return t.SelectTemplateWithSubTemplates(selected.SubTemplates, selectedTemplates)
 }
 
