@@ -84,7 +84,10 @@ func TestSelectTemplateWithSubTemplates(t *testing.T) {
 			selectorFunc: func(templates config.Templates) (config.Template, error) {
 				return config.Template{}, errors.New("error picking template")
 			},
-			input:       config.Templates{"foo": {File: "foo.tpl.md"}},
+			input: config.Templates{
+				"foo": {File: "foo.tpl.md"},
+				"bar": {File: "bar.tpl.md"},
+			},
 			expected:    []config.Template{},
 			assertError: require.Error,
 		},

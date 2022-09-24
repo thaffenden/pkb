@@ -31,21 +31,22 @@ func (t TemplateSelector) SelectTemplateWithSubTemplates(
 	templates config.Templates,
 	selectedTemplates []config.Template,
 ) ([]config.Template, error) {
-	selected, err := t.SelectFunc(templates)
-	if err != nil {
-		return []config.Template{}, err
+	// If there is only one sub template use that by default, so the user is not
+	// given a prompt with only a single value.
+	selected := templates.First()
+
+	// More than one, so prompt the user to pick which one they want.
+	if len(templates) > 1 {
+		var err error
+		selected, err = t.SelectFunc(templates)
+		if err != nil {
+			return []config.Template{}, err
+		}
 	}
 
 	selectedTemplates = append(selectedTemplates, selected)
 
 	if !selected.HasSubTemplates() {
-		return selectedTemplates, nil
-	}
-
-	// If there is only one sub template use that by default, so the user is not
-	// given a prompt with only a single value.
-	if selected.GetNumberOfSubTemplates() == 1 {
-		selectedTemplates = append(selectedTemplates, selected.SubTemplates.First())
 		return selectedTemplates, nil
 	}
 
