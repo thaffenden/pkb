@@ -21,6 +21,7 @@ import (
 type TemplateRenderer struct {
 	Config           config.Config
 	DirectoryPrompt  func() (string, error)
+	DirectorySelect  func(string) (string, error)
 	Name             string
 	NamePrompt       func() (string, error)
 	SelectedTemplate config.Template
@@ -41,6 +42,7 @@ func NewTemplateRenderer(conf config.Config, templates []config.Template) Templa
 	return TemplateRenderer{
 		Config:          conf,
 		DirectoryPrompt: prompt.EnterDirectory,
+		DirectorySelect: prompt.SelectDirectory,
 		NamePrompt:      prompt.EnterFileName,
 		Time:            time.Now(),
 		Templates:       templates,
@@ -163,10 +165,16 @@ func (t *TemplateRenderer) OutputPath() (string, error) {
 	for _, config := range t.Templates {
 		outputDir := config.OutputDir
 
+		var err error
 		if config.OutputDir == "{{Prompt}}" {
-			var err error
-
 			outputDir, err = t.DirectoryPrompt()
+			if err != nil {
+				return "", err
+			}
+		}
+
+		if config.OutputDir == "{{Select}}" {
+			outputDir, err = t.DirectorySelect(filepath.Join(output...))
 			if err != nil {
 				return "", err
 			}
