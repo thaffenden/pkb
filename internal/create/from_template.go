@@ -14,6 +14,7 @@ import (
 
 	"github.com/thaffenden/pkb/internal/config"
 	"github.com/thaffenden/pkb/internal/date"
+	"github.com/thaffenden/pkb/internal/dir"
 	"github.com/thaffenden/pkb/internal/prompt"
 )
 
@@ -59,7 +60,7 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 		return "", err
 	}
 
-	if err := createParentDirectories(outputPath); err != nil {
+	if err := dir.CreateParentDirectories(outputPath); err != nil {
 		return "", err
 	}
 
@@ -195,18 +196,4 @@ func (t *TemplateRenderer) OutputPath() (string, error) {
 	output = append(output, SanitiseFileName(t.Name))
 
 	return filepath.Join(output...), nil
-}
-
-// createParentDirectories creates the parent directories for the rendered file
-// if they don't already exist.
-func createParentDirectories(outputPath string) error {
-	parentDir := filepath.Dir(outputPath)
-
-	if _, err := os.Stat(parentDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(parentDir, 0o750); err != nil {
-			return fmt.Errorf("error creating parent directory %s for file %s", parentDir, outputPath)
-		}
-	}
-
-	return nil
 }
