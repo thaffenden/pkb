@@ -36,6 +36,17 @@ You can combine the supported formats to use them both, e.g.:
 In this example the document would be created with the current date then the
 value you typed in the prompt, e.g. `2022-09-19-typed-value.md`.
 
+## Selecting an output directory
+
+If you don't want to hardcode the output directory in your config you can use
+the dynamic values to prompt you for input at time of creation.
+
+The following values are currently supported:
+
+- `{{Prompt}}` - will let you type in a new directory name. If the directory
+does not already exist it will be created.
+- `{{Select}}` - select from existing directories inside the parent.
+
 ## TODO
 
 - [] flesh out README

@@ -14,13 +14,17 @@ import (
 
 	"github.com/thaffenden/pkb/internal/config"
 	"github.com/thaffenden/pkb/internal/date"
+	"github.com/thaffenden/pkb/internal/dir"
 	"github.com/thaffenden/pkb/internal/prompt"
 )
 
 // TemplateRenderer holds the config required to render and save the template.
 type TemplateRenderer struct {
 	Config           config.Config
+	DirectoryPrompt  func() (string, error)
+	DirectorySelect  func(string) (string, error)
 	Name             string
+	NamePrompt       func() (string, error)
 	SelectedTemplate config.Template
 	Time             time.Time
 	Templates        []config.Template
@@ -37,9 +41,12 @@ type templateVariables struct {
 // NewTemplateRenderer creates a new instance of the TemplateRenderer.
 func NewTemplateRenderer(conf config.Config, templates []config.Template) TemplateRenderer {
 	return TemplateRenderer{
-		Config:    conf,
-		Time:      time.Now(),
-		Templates: templates,
+		Config:          conf,
+		DirectoryPrompt: prompt.EnterDirectory,
+		DirectorySelect: prompt.SelectDirectory,
+		NamePrompt:      prompt.EnterFileName,
+		Time:            time.Now(),
+		Templates:       templates,
 	}
 }
 
@@ -48,16 +55,12 @@ func NewTemplateRenderer(conf config.Config, templates []config.Template) Templa
 func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 	t.SelectedTemplate = t.Templates[len(t.Templates)-1]
 
-	fileName, err := t.GetFileName(prompt.EnterFileName)
+	outputPath, err := t.OutputPath()
 	if err != nil {
 		return "", err
 	}
 
-	t.Name = fileName
-
-	outputPath := OutputPath(t.Config.Directory, t.Name, t.Templates)
-
-	if err := createParentDirectories(outputPath); err != nil {
+	if err := dir.CreateParentDirectories(outputPath); err != nil {
 		return "", err
 	}
 
@@ -94,9 +97,9 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 
 // GetFileName either prompts the user for input or uses one of the supported
 // name specifiers to automatically set the date.
-func (t TemplateRenderer) GetFileName(promptFunc func() (string, error)) (string, error) {
+func (t TemplateRenderer) GetFileName() (string, error) {
 	if t.SelectedTemplate.NameFormat == "" {
-		return promptFunc()
+		return t.NamePrompt()
 	}
 
 	outputString := t.SelectedTemplate.NameFormat
@@ -106,7 +109,7 @@ func (t TemplateRenderer) GetFileName(promptFunc func() (string, error)) (string
 	}
 
 	if strings.Contains(outputString, "PROMPT") {
-		promptString, err := promptFunc()
+		promptString, err := t.NamePrompt()
 		if err != nil {
 			return "", err
 		}
@@ -155,29 +158,42 @@ func (t TemplateRenderer) Render(content string, writer io.Writer) error {
 }
 
 // OutputPath walks the sub template config to get build the full output path
-// handling any nested sub templates.
-func OutputPath(rootDir string, fileName string, templates []config.Template) string {
-	output := []string{rootDir}
+// handling any nested sub templates and prompts or selections for output
+// directories.
+func (t *TemplateRenderer) OutputPath() (string, error) {
+	output := []string{t.Config.Directory}
 
-	for _, config := range templates {
-		output = append(output, config.OutputDir)
-	}
+	for _, config := range t.Templates {
+		outputDir := config.OutputDir
 
-	output = append(output, SanitiseFileName(fileName))
-
-	return filepath.Join(output...)
-}
-
-// createParentDirectories creates the parent directories for the rendered file
-// if they don't already exist.
-func createParentDirectories(outputPath string) error {
-	parentDir := filepath.Dir(outputPath)
-
-	if _, err := os.Stat(parentDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(parentDir, 0o750); err != nil {
-			return fmt.Errorf("error creating parent directory %s for file %s", parentDir, outputPath)
+		var err error
+		if config.OutputDir == "{{Prompt}}" {
+			outputDir, err = t.DirectoryPrompt()
+			if err != nil {
+				return "", err
+			}
 		}
+
+		if config.OutputDir == "{{Select}}" {
+			outputDir, err = t.DirectorySelect(filepath.Join(output...))
+			if err != nil {
+				return "", err
+			}
+		}
+
+		output = append(output, SanitiseDirPath(outputDir))
 	}
 
-	return nil
+	if t.Name == "" {
+		fileName, err := t.GetFileName()
+		if err != nil {
+			return "", err
+		}
+
+		t.Name = fileName
+	}
+
+	output = append(output, SanitiseFileName(t.Name))
+
+	return filepath.Join(output...), nil
 }

@@ -18,25 +18,26 @@ func TestGetFileName(t *testing.T) {
 
 	testCases := map[string]struct {
 		renderer    create.TemplateRenderer
-		promptFunc  func() (string, error)
 		expected    string
 		assertError require.ErrorAssertionFunc
 	}{
 		"uses prompt when no value in config": {
-			renderer: create.TemplateRenderer{Templates: []config.Template{{}}},
-			promptFunc: func() (string, error) {
-				return "prompted for this string", nil
+			renderer: create.TemplateRenderer{
+				NamePrompt: func() (string, error) {
+					return "prompted for this string", nil
+				},
+				Templates: []config.Template{{}},
 			},
 			expected:    "prompted for this string",
 			assertError: require.NoError,
 		},
 		"combines values when mutiple provided": {
 			renderer: create.TemplateRenderer{
+				NamePrompt: func() (string, error) {
+					return "wow this is great", nil
+				},
 				SelectedTemplate: config.Template{NameFormat: "DATE-PROMPT"},
 				Time:             testTime,
-			},
-			promptFunc: func() (string, error) {
-				return "wow this is great", nil
 			},
 			expected:    "2022-09-19-wow this is great",
 			assertError: require.NoError,
@@ -49,7 +50,7 @@ func TestGetFileName(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			actual, err := tc.renderer.GetFileName(tc.promptFunc)
+			actual, err := tc.renderer.GetFileName()
 			tc.assertError(t, err)
 			assert.Equal(t, tc.expected, actual)
 		})
@@ -60,40 +61,68 @@ func TestOutputPath(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
-		name      string
-		rootDir   string
-		templates []config.Template
-		expected  string
+		templateRenderer create.TemplateRenderer
+		assertError      require.ErrorAssertionFunc
+		expected         string
 	}{
 		"returns path for single template": {
-			name:    "simple.md",
-			rootDir: "/home/username/notes",
-			templates: []config.Template{
-				{
-					File:      "magic.tpl.md",
-					OutputDir: "magic",
+			templateRenderer: create.TemplateRenderer{
+				Config: config.Config{
+					Directory: "/home/username/notes",
+				},
+				Name: "simple.md",
+				Templates: []config.Template{
+					{
+						File:      "magic.tpl.md",
+						OutputDir: "magic",
+					},
 				},
 			},
-			expected: "/home/username/notes/magic/simple.md",
+			assertError: require.NoError,
+			expected:    "/home/username/notes/magic/simple.md",
 		},
 		"creates full nested dir path when there are subtemplates": {
-			name:    "nested-example.md",
-			rootDir: "/home/username/notes",
-			templates: []config.Template{
-				{
-					File:      "foo.tpl.md",
-					OutputDir: "foo",
+			templateRenderer: create.TemplateRenderer{
+				Config: config.Config{
+					Directory: "/home/username/notes",
 				},
-				{
-					File:      "bar.tpl.md",
-					OutputDir: "bar",
-				},
-				{
-					File:      "wow.tpl.md",
-					OutputDir: "wow",
+				Name: "nested-example.md",
+				Templates: []config.Template{
+					{
+						File:      "foo.tpl.md",
+						OutputDir: "foo",
+					},
+					{
+						File:      "bar.tpl.md",
+						OutputDir: "bar",
+					},
+					{
+						File:      "wow.tpl.md",
+						OutputDir: "wow",
+					},
 				},
 			},
-			expected: "/home/username/notes/foo/bar/wow/nested-example.md",
+			assertError: require.NoError,
+			expected:    "/home/username/notes/foo/bar/wow/nested-example.md",
+		},
+		"prompts user for directory input when specified in template config": {
+			templateRenderer: create.TemplateRenderer{
+				Config: config.Config{
+					Directory: "/home/username/notes",
+				},
+				Name: "simple.md",
+				DirectoryPrompt: func() (string, error) {
+					return "foo/dir", nil
+				},
+				Templates: []config.Template{
+					{
+						File:      "magic.tpl.md",
+						OutputDir: "{{Prompt}}",
+					},
+				},
+			},
+			assertError: require.NoError,
+			expected:    "/home/username/notes/foo/dir/simple.md",
 		},
 	}
 
@@ -103,7 +132,8 @@ func TestOutputPath(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			actual := create.OutputPath(tc.rootDir, tc.name, tc.templates)
+			actual, err := tc.templateRenderer.OutputPath()
+			tc.assertError(t, err)
 			assert.Equal(t, tc.expected, actual)
 		})
 	}

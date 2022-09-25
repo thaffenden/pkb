@@ -21,6 +21,19 @@
           "output_dir": "front-end"
         }
       }
+    },
+    "projects": {
+      "output_dir": "work/company",
+      "sub_templates": {
+        "misc": {
+          "file": "projects.misc.tpl.md",
+          "output_dir": "{{Prompt}}"
+        },
+        "minutes": {
+          "file": "meeting-minutes.pld.md",
+          "output_dir": "{{Prompt}}"
+        }
+      }
     }
   }
 }
