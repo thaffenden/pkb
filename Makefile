@@ -1,9 +1,10 @@
 BINARY_NAME=pkb
 DIR=./...
+VERSION ?= $(shell head -n 1 VERSION)
 
 .PHONY: build
 build:
-	@go build -o ${BINARY_NAME} .
+	@go build -ldflags "-X github.com/thaffenden/pkb/cmd.Version=${VERSION}" -o ${BINARY_NAME} .
 
 .PHONY: fmt
 fmt:
