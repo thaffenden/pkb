@@ -14,6 +14,11 @@ fmt:
 lint:
 	@golangci-lint run -v ./...
 
+.PHONY: push-tag
+push-tag:
+	@git tag -a ${VERSION}
+	@git push origin ${VERSION}
+
 .PHONY: test
 test:
 	@CGO_ENABLED=1 go test ${DIR} -race -cover
