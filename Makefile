@@ -16,7 +16,7 @@ lint:
 
 .PHONY: push-tag
 push-tag:
-	@git tag -a ${VERSION}
+	@git tag -a ${VERSION} -m "Release ${VERSION}"
 	@git push origin ${VERSION}
 
 .PHONY: test
