@@ -3,13 +3,13 @@ module github.com/thaffenden/pkb
 go 1.18
 
 require (
+	github.com/aymanbagabas/go-osc52 v1.2.1
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.5.0
 	github.com/stretchr/testify v1.8.0
 )
 
 require (
-	github.com/aymanbagabas/go-osc52 v1.2.1 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mattn/go-isatty v0.0.8 // indirect
