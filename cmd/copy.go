@@ -2,7 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 
+	"github.com/aymanbagabas/go-osc52"
 	"github.com/spf13/cobra"
 	"github.com/thaffenden/pkb/internal/config"
 	"github.com/thaffenden/pkb/internal/prompt"
@@ -23,6 +26,12 @@ func CreateCopy() *cobra.Command {
 				return err
 			}
 
+			content, err := os.ReadFile(filepath.Clean(selected))
+			if err != nil {
+				return err
+			}
+
+			osc52.Copy(string(content))
 			fmt.Printf("copied %s contents to clipboard", selected)
 			return nil
 		},
