@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/thaffenden/pkb/internal/config"
-	"github.com/thaffenden/pkb/internal/dir"
+	"github.com/thaffenden/pkb/internal/prompt"
 )
 
 // CreateCopy creates the new command "copy" used to select a note to copy
@@ -18,17 +18,12 @@ func CreateCopy() *cobra.Command {
 				return err
 			}
 
-			allPaths, err := dir.GetAllFilesInDirectory(conf.Directory)
+			selected, err := prompt.SelectExistingNoteFile(conf.Directory)
 			if err != nil {
 				return err
 			}
 
-			// survey prompt to select file
-			// copy selected file to clipboard
-			for _, path := range allPaths {
-				fmt.Println(path)
-			}
-
+			fmt.Printf("copied %s contents to clipboard", selected)
 			return nil
 		},
 		Short: "select a note and copy it's content to your system clipboard",

@@ -1,0 +1,34 @@
+package prompt
+
+import (
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/thaffenden/pkb/internal/dir"
+)
+
+// SelectExistingNoteFile prompt the user to select a file and returns the
+// full path of the selected file.
+func SelectExistingNoteFile(searchDir string) (string, error) {
+	allPaths, err := dir.GetAllFilesInDirectory(searchDir)
+	if err != nil {
+		return "", err
+	}
+
+	answer := struct {
+		Selected string `survey:"file"`
+	}{}
+
+	err = survey.Ask([]*survey.Question{
+		{
+			Name: "file",
+			Prompt: &survey.Select{
+				Message: "select existing note:",
+				Options: allPaths,
+			},
+		},
+	}, &answer)
+	if err != nil {
+		return "", err
+	}
+
+	return answer.Selected, nil
+}
