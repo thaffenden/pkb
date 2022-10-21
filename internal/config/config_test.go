@@ -2,7 +2,6 @@ package config_test
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -68,7 +67,7 @@ func TestLoad(t *testing.T) {
 
 		t.Run(description, func(t *testing.T) {
 			if tc.xdgConfigDir == "" {
-				if err := os.Setenv("HOME", filepath.FromSlash("testdata/home")); err != nil {
+				if err := os.Setenv("HOME", filepath.Join("testdata", "home")); err != nil {
 					log.Fatal(err)
 				}
 				defer func() {
@@ -79,7 +78,7 @@ func TestLoad(t *testing.T) {
 			}
 
 			if tc.xdgConfigDir != "" {
-				if err := os.Setenv("XDG_CONFIG_HOME", filepath.FromSlash(fmt.Sprintf("testdata/xdg/%s", tc.xdgConfigDir))); err != nil {
+				if err := os.Setenv("XDG_CONFIG_HOME", filepath.Join("testdata", "xdg", tc.xdgConfigDir)); err != nil {
 					log.Fatal(err)
 				}
 				defer func() {

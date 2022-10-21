@@ -29,4 +29,5 @@ func Execute(conf config.Config) error {
 func init() {
 	rootCmd.AddCommand(CreateNew())
 	rootCmd.AddCommand(CreateEdit())
+	rootCmd.AddCommand(CreateCopy())
 }

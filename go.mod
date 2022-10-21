@@ -3,6 +3,7 @@ module github.com/thaffenden/pkb
 go 1.18
 
 require (
+	github.com/aymanbagabas/go-osc52 v1.2.1
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.6.0
 	github.com/stretchr/testify v1.8.0

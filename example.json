@@ -30,7 +30,7 @@
           "output_dir": "{{Prompt}}"
         },
         "minutes": {
-          "file": "meeting-minutes.pld.md",
+          "file": "meeting-minutes.tpl.md",
           "output_dir": "{{Prompt}}"
         }
       }
