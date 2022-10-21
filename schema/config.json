@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/thaffenden/pkb/blob/main/schema/config.json",
+  "title": "JSON schema for pkb config file.",
+  "description": "Config file for pkb",
+  "type": "object",
+  "properties": {
+    "directory": {
+      "description": "The directory you want to store your notes in. This will be used as the base directory with any template 'out_dirs' being used as sub directories.",
+      "type": "string"
+    },
+    "editor": {
+      "description": "The editor to use to open notes after they are created. Must be triggerable from the terminal.",
+      "type": "string"
+    },
+    "templates": {
+      "description": "The templates you want to use to create notes from.",
+      "type": "object",
+      "properties": {
+        "file": {
+          "description": "The name of the template file for the note type. Should be a 'tpl.md' file so variables can be expanded in the markdown template.",
+          "type": "string"
+        },
+        "name_format": {
+          "description": "The formatter to use for the file name if you don't want to be prompted for it each time. See README for 'special' options.",
+          "type": "string"
+        },
+        "output_dir": {
+          "description": "The directory you want the note to be created in. See README for 'special' options.",
+          "type": "string"
+        },
+        "sub_templates": {
+          "description": "Nested template config, so you can define how to treat things in sub directories.",
+          "$ref": "#/properties/templates"
+        }
+      },
+      "required": ["file"]
+    },
+    "required": ["directory", "editor", "templates"]
+  }
+}
