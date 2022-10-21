@@ -10,6 +10,10 @@ build:
 fmt:
 	@go fmt ${DIR}
 
+.PHONY: install
+install: build
+	@sudo cp ./${BINARY_NAME} /usr/bin/${BINARY_NAME}
+
 .PHONY: lint
 lint:
 	@golangci-lint run -v ./...
