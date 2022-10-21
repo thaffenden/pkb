@@ -18,6 +18,10 @@ install: build
 lint:
 	@golangci-lint run -v ./...
 
+.PHONY: lint-schema
+lint-schema:
+	@curl --request POST --header "Content-Type: application/json" --data @schema/config.json https://www.json-schema-linter.com/api/jsonschemalinter/analyze
+
 .PHONY: push-tag
 push-tag:
 	@git tag -a ${VERSION} -m "Release ${VERSION}"
