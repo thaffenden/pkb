@@ -21,7 +21,7 @@ func TestGetAllFilesInDirectory(t *testing.T) {
 			inputDir:    "no-ignores",
 			assertError: require.NoError,
 			expected: []string{
-				"testdata/no-ignores/one",
+				"testdata/no-ignores/sub/dir/one",
 				"testdata/no-ignores/two",
 				"testdata/no-ignores/three",
 			},
