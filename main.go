@@ -2,19 +2,20 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"os"
 
 	"github.com/thaffenden/pkb/cmd"
-	"github.com/thaffenden/pkb/internal/config"
 )
 
 func main() {
-	config, err := config.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
+	code := 0
+	defer func() {
+		os.Exit(code)
+	}()
 
-	if err := cmd.Execute(config); err != nil {
-		log.Fatal(err)
+	if err := cmd.Execute(); err != nil {
+		code = 1
+		fmt.Printf("error: %v\n", err)
 	}
 }

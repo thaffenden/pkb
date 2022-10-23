@@ -153,7 +153,6 @@ func TestRender(t *testing.T) {
 		"expands expected variables": {
 			renderer: create.TemplateRenderer{
 				Config: config.Config{
-					FilePath:  "example.tpl.md",
 					Templates: map[string]config.Template{},
 				},
 				Name: "example doc",

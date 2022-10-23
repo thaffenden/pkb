@@ -2,12 +2,10 @@
 package config
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
-	"os"
-	"path/filepath"
 
+	"github.com/spf13/viper"
 	"github.com/thaffenden/pkb/internal/sentinel"
 )
 
@@ -21,49 +19,36 @@ const ContextKey CtxKey = "config"
 type (
 	// Config represents the options defined in the config file.
 	Config struct {
-		Directory string `json:"directory"`
-		Editor    string `json:"editor"`
-		FilePath  string
+		Directory string    `json:"directory"`
+		Editor    string    `json:"editor"`
 		Templates Templates `json:"templates"`
 	}
 )
 
-// Load reads the users config file and returns the config struct.
-func Load() (Config, error) {
-	root := os.Getenv("XDG_CONFIG_HOME")
+// Get fetches the config via viper and converts it to a config struct so it
+// can be used properly.
+func Get() (Config, error) {
+	conf := viper.AllSettings()
 
-	if root == "" {
-		root = filepath.Join(os.Getenv("HOME"), ".config")
-	}
-
-	configFilePath := filepath.Clean(filepath.Join(root, "pkb", "config.json"))
-
-	if _, err := os.Stat(configFilePath); err != nil {
-		return Config{}, sentinel.Wrap(nil, ErrConfigNotFound)
-	}
-
-	contents, err := os.ReadFile(configFilePath)
+	jsonContent, err := json.Marshal(conf)
 	if err != nil {
-		return Config{}, sentinel.Wrap(err, ErrReadingConfigFile)
+		return Config{}, err
 	}
 
-	var configContents Config
-	if err := json.Unmarshal(contents, &configContents); err != nil {
+	parsedConfig := Config{}
+	if err := json.Unmarshal(jsonContent, &parsedConfig); err != nil {
 		return Config{}, sentinel.Wrap(err, ErrUnmashallingJSON)
 	}
 
-	configContents.FilePath = configFilePath
-
-	return configContents, nil
+	return parsedConfig, nil
 }
 
-// FromContext returns the Config struct from the provided context with the
-// correct type asserted from the default context interface{} return value.
-func FromContext(ctx context.Context) (Config, error) {
-	conf, ok := ctx.Value(ContextKey).(Config)
-	if !ok {
-		return Config{}, errors.New("error getting config from context")
+// GetDirectory returns the directory value defined in config.
+func GetDirectory() (string, error) {
+	dir := viper.GetString("directory")
+	if dir == "" {
+		return "", errors.New("no directory defined in config file")
 	}
 
-	return conf, nil
+	return dir, nil
 }

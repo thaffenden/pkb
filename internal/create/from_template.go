@@ -12,6 +12,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/spf13/viper"
 	"github.com/thaffenden/pkb/internal/config"
 	"github.com/thaffenden/pkb/internal/date"
 	"github.com/thaffenden/pkb/internal/dir"
@@ -65,11 +66,9 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 	}
 
 	templateFile := filepath.Clean(
-		filepath.Join(
-			filepath.Dir(t.Config.FilePath),
-			t.SelectedTemplate.File,
-		),
+		filepath.Join(filepath.Dir(viper.ConfigFileUsed()), t.SelectedTemplate.File),
 	)
+
 	contents, err := ioutil.ReadFile(templateFile)
 	if err != nil {
 		return "", err

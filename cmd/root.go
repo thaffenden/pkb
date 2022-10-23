@@ -2,10 +2,12 @@
 package cmd
 
 import (
-	"context"
+	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/thaffenden/pkb/internal/config"
+	"github.com/spf13/viper"
+	"github.com/thaffenden/pkb/internal/flags"
 )
 
 // Version is the CLI version set via linker flags at build time.
@@ -21,13 +23,35 @@ var rootCmd = &cobra.Command{
 }
 
 // Execute executes the root command.
-func Execute(conf config.Config) error {
-	ctx := context.WithValue(context.Background(), config.ContextKey, conf)
-	return rootCmd.ExecuteContext(ctx)
+func Execute() error {
+	return rootCmd.Execute()
 }
 
 func init() {
+	cobra.OnInitialize(initConfig)
 	rootCmd.AddCommand(CreateNew())
 	rootCmd.AddCommand(CreateEdit())
 	rootCmd.AddCommand(CreateCopy())
+	rootCmd.PersistentFlags().StringVar(&flags.ConfigFile, "config", "", "config file if not held at default location")
+	err := viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
+	if err != nil {
+		fmt.Printf("error binding --config flag: %s", err)
+		os.Exit(1)
+	}
+}
+
+func initConfig() {
+	if flags.ConfigFile == "" {
+		viper.SetConfigName("config")
+		viper.SetConfigType("json")
+		viper.AddConfigPath("$XDG_CONFIG_DIR/pkb/")
+		viper.AddConfigPath("$HOME/.config/pkb/")
+	} else {
+		viper.SetConfigFile(flags.ConfigFile)
+	}
+
+	if err := viper.ReadInConfig(); err != nil {
+		fmt.Printf("error trying to read config file: %s", err)
+		os.Exit(1)
+	}
 }
