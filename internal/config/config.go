@@ -52,20 +52,3 @@ func GetDirectory() (string, error) {
 
 	return dir, nil
 }
-
-// GetTemplates returns the Templates type from the untyped viper config.
-func GetTemplates() (Templates, error) {
-	templates := viper.GetStringMap("templates")
-
-	jsonContent, err := json.Marshal(templates)
-	if err != nil {
-		return Templates{}, err
-	}
-
-	parsedTemplates := Templates{}
-	if err := json.Unmarshal(jsonContent, &parsedTemplates); err != nil {
-		return Templates{}, err
-	}
-
-	return parsedTemplates, nil
-}
