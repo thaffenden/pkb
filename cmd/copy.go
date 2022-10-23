@@ -16,12 +16,12 @@ import (
 func CreateCopy() *cobra.Command {
 	cmd := &cobra.Command{
 		RunE: func(ccmd *cobra.Command, args []string) error {
-			conf, err := config.FromContext(ccmd.Context())
+			dir, err := config.GetDirectory()
 			if err != nil {
 				return err
 			}
 
-			selected, err := prompt.SelectExistingNoteFile(conf.Directory)
+			selected, err := prompt.SelectExistingNoteFile(dir)
 			if err != nil {
 				return err
 			}

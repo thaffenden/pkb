@@ -2,13 +2,11 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thaffenden/pkb/internal/config"
 	"github.com/thaffenden/pkb/internal/flags"
 )
 
@@ -25,9 +23,8 @@ var rootCmd = &cobra.Command{
 }
 
 // Execute executes the root command.
-func Execute(conf config.Config) error {
-	ctx := context.WithValue(context.Background(), config.ContextKey, conf)
-	return rootCmd.ExecuteContext(ctx)
+func Execute() error {
+	return rootCmd.Execute()
 }
 
 func init() {
@@ -36,7 +33,11 @@ func init() {
 	rootCmd.AddCommand(CreateEdit())
 	rootCmd.AddCommand(CreateCopy())
 	rootCmd.PersistentFlags().StringVar(&flags.ConfigFile, "config", "", "config file if not held at default location")
-	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
+	err := viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
+	if err != nil {
+		fmt.Printf("error binding --config flag: %s", err)
+		os.Exit(1)
+	}
 }
 
 func initConfig() {

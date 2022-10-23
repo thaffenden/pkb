@@ -2,13 +2,10 @@
 package config
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
-	"os"
-	"path/filepath"
 
-	"github.com/thaffenden/pkb/internal/sentinel"
+	"github.com/spf13/viper"
 )
 
 // CtxKey is the type for the config that gets bound to the cobra context
@@ -28,42 +25,47 @@ type (
 	}
 )
 
-// Load reads the users config file and returns the config struct.
-func Load() (Config, error) {
-	root := os.Getenv("XDG_CONFIG_HOME")
+// Get fetches the config via viper and converts it to a config struct so it
+// can be used properly.
+func Get() (Config, error) {
+	conf := viper.AllSettings()
 
-	if root == "" {
-		root = filepath.Join(os.Getenv("HOME"), ".config")
-	}
-
-	configFilePath := filepath.Clean(filepath.Join(root, "pkb", "config.json"))
-
-	if _, err := os.Stat(configFilePath); err != nil {
-		return Config{}, sentinel.Wrap(nil, ErrConfigNotFound)
-	}
-
-	contents, err := os.ReadFile(configFilePath)
+	jsonContent, err := json.Marshal(conf)
 	if err != nil {
-		return Config{}, sentinel.Wrap(err, ErrReadingConfigFile)
+		return Config{}, err
 	}
 
-	var configContents Config
-	if err := json.Unmarshal(contents, &configContents); err != nil {
-		return Config{}, sentinel.Wrap(err, ErrUnmashallingJSON)
+	parsedConfig := Config{}
+	if err := json.Unmarshal(jsonContent, &parsedConfig); err != nil {
+		return Config{}, err
 	}
 
-	configContents.FilePath = configFilePath
-
-	return configContents, nil
+	return parsedConfig, nil
 }
 
-// FromContext returns the Config struct from the provided context with the
-// correct type asserted from the default context interface{} return value.
-func FromContext(ctx context.Context) (Config, error) {
-	conf, ok := ctx.Value(ContextKey).(Config)
-	if !ok {
-		return Config{}, errors.New("error getting config from context")
+// GetDirectory returns the directory value defined in config.
+func GetDirectory() (string, error) {
+	dir := viper.GetString("directory")
+	if dir == "" {
+		return "", errors.New("no directory defined in config file")
 	}
 
-	return conf, nil
+	return dir, nil
+}
+
+// GetTemplates returns the Templates type from the untyped viper config.
+func GetTemplates() (Templates, error) {
+	templates := viper.GetStringMap("templates")
+
+	jsonContent, err := json.Marshal(templates)
+	if err != nil {
+		return Templates{}, err
+	}
+
+	parsedTemplates := Templates{}
+	if err := json.Unmarshal(jsonContent, &parsedTemplates); err != nil {
+		return Templates{}, err
+	}
+
+	return parsedTemplates, nil
 }

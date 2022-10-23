@@ -10,7 +10,7 @@ import (
 func CreateEdit() *cobra.Command {
 	cmd := &cobra.Command{
 		RunE: func(ccmd *cobra.Command, args []string) error {
-			conf, err := config.FromContext(ccmd.Context())
+			conf, err := config.Get()
 			if err != nil {
 				return err
 			}
