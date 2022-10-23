@@ -65,11 +65,9 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 	}
 
 	templateFile := filepath.Clean(
-		filepath.Join(
-			filepath.Dir(t.Config.FilePath),
-			t.SelectedTemplate.File,
-		),
+		filepath.Join(t.Config.TemplateDir, t.SelectedTemplate.File),
 	)
+
 	contents, err := ioutil.ReadFile(templateFile)
 	if err != nil {
 		return "", err

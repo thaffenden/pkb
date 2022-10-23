@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/thaffenden/pkb/0215448835f61e3c9728968ed238872466896fd7/schema/config.json",
   "directory": "/home/tristan/git/pkb/test/output",
   "editor": "nvim",
-  "templates-dir": "/home/tristan/git/pkb/test",
+  "template_dir": "/home/tristan/git/pkb/test",
   "templates": {
     "daily": {
       "file": "daily.tpl.md",
@@ -13,11 +13,11 @@
       "output_dir": "work/company",
       "sub_templates": {
         "misc": {
-          "file": "projects.misc.tpl.md",
+          "file": "projects.tpl.md",
           "output_dir": "{{Prompt}}"
         },
         "minutes": {
-          "file": "meeting-minutes.tpl.md",
+          "file": "minutes.tpl.md",
           "output_dir": "{{Prompt}}"
         }
       }
