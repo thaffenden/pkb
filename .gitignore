@@ -2,3 +2,4 @@
 !**/notes/
 coverage.out
 _null-ls*
+test/output/**/*
