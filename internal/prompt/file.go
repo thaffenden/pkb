@@ -5,9 +5,9 @@ import (
 	"github.com/thaffenden/pkb/internal/dir"
 )
 
-// SelectExistingNoteFile prompt the user to select a file and returns the
+// SelectExistingFile prompt the user to select a file and returns the
 // full path of the selected file.
-func SelectExistingNoteFile(searchDir string) (string, error) {
+func SelectExistingFile(searchDir string) (string, error) {
 	allPaths, err := dir.GetAllFilesInDirectory(searchDir)
 	if err != nil {
 		return "", err

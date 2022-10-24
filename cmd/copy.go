@@ -21,7 +21,7 @@ func CreateCopy() *cobra.Command {
 				return err
 			}
 
-			selected, err := prompt.SelectExistingNoteFile(dir)
+			selected, err := prompt.SelectExistingFile(dir)
 			if err != nil {
 				return err
 			}
