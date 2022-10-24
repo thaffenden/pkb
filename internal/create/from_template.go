@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"text/template"
 	"time"
@@ -96,7 +97,7 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 }
 
 // GetFileName either prompts the user for input or uses one of the supported
-// name specifiers to automatically set the date.
+// name specifiers to automatically set the name.
 func (t TemplateRenderer) GetFileName() (string, error) {
 	if t.SelectedTemplate.NameFormat == "" {
 		return t.NamePrompt()
@@ -115,6 +116,15 @@ func (t TemplateRenderer) GetFileName() (string, error) {
 		}
 
 		outputString = strings.ReplaceAll(outputString, "{{.Prompt}}", promptString)
+	}
+
+	year, week := t.Time.ISOWeek()
+	if strings.Contains(outputString, "{{.Week}}") {
+		outputString = strings.ReplaceAll(outputString, "{{.Week}}", strconv.Itoa(week))
+	}
+
+	if strings.Contains(outputString, "{{.Year}}") {
+		outputString = strings.ReplaceAll(outputString, "{{.Year}}", strconv.Itoa(year))
 	}
 
 	return outputString, nil

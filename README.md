@@ -5,9 +5,11 @@
 Config driven CLI to manage the notes and documents that make up your personal
 knowledge base.
 
+![pkb-demo](https://user-images.githubusercontent.com/14163530/197567638-f6909de6-833c-4854-8c12-bab9c639739a.gif)
+
 ## Contents
 
-- [Why](#why)
+- [Why?](#why)
 - [Install](#install)
   - [Download from GitHub](#download-from-github)
   - [Build it locally](#build-it-locally)
@@ -71,6 +73,8 @@ then the file will be opened in the editor specified in your config file.
 Don't want to edit it right now? Just use `--no-edit`. The file will still be
 created, just not opened.
 
+![pkb-new-demo](https://user-images.githubusercontent.com/14163530/197568150-a6cea17a-18e2-4b78-aa0d-4b8939c141b6.gif)
+
 ### `edit`
 
 Open your editor in your notes directory.
@@ -78,12 +82,16 @@ Open your editor in your notes directory.
 Want to pick a specific file through `pkb` rather than in your editor? Use the
 `--pick` flag to select the specific file then open it for editing.
 
+![pkb-edit-demo](https://user-images.githubusercontent.com/14163530/197568755-bff18878-dfb4-4423-8db1-7c42e00333b5.gif)
+
 ### `copy`
 
 Copy the contents of a file to your system clipboard.
 
 Useful if you want to write up notes about something in your editor, but then
 need to share them somewhere for other people to read.
+
+![pkb-copy-demo](https://user-images.githubusercontent.com/14163530/197569321-92c11700-7c43-4050-9e5b-123a1e8d38cf.gif)
 
 **Coming soon:** even more things to simplify your knowledge base management.
 
@@ -114,8 +122,8 @@ to be included in the template config to be able to use a custom date format.
 - `{{.Date}}` - the current date in the format YYYY-MM-DD.
 - `{{.Name}}` - the name of the created document.
 - `{{.Time}}` - the time the file was created in the format HH:MM.
-- `{{.Week}}` - the week number the file was created.
-- `{{.Year}}` - the year the file was created.
+- `{{.Week}}` - the current week number.
+- `{{.Year}}` - the current year.
 
 ### Custom file name formats
 
@@ -124,10 +132,12 @@ enter the name value, however you can customise with `name_format`.
 
 The following values are currently supported:
 
-- `{{.Date}}` - the current date in the format `YYYY-MM-DD`
-- `{{.Prompt}}` - prompt for user input
+- `{{.Date}}` - the current date in the format `YYYY-MM-DD`.
+- `{{.Prompt}}` - prompt for user input.
+- `{{.Week}}` - the current week number.
+- `{{.Year}}` - the current year.
 
-You can combine the supported formats to use them both, e.g.:
+You can combine the supported formats to use them together, e.g.:
 
 ```json
 "name_format": "{{.Date}}-{{.Prompt}}"
