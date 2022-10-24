@@ -2,6 +2,7 @@ package prompt
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/thaffenden/pkb/internal/config"
@@ -59,12 +60,15 @@ func SelectTemplate(templates config.Templates) (config.Template, error) {
 		Selected string `survey:"template"`
 	}{}
 
+	templateList := maps.Keys(templates)
+	sort.Strings(templateList)
+
 	err := survey.Ask([]*survey.Question{
 		{
 			Name: "template",
 			Prompt: &survey.Select{
 				Message: "select template:",
-				Options: maps.Keys(templates),
+				Options: templateList,
 			},
 		},
 	}, &answer)

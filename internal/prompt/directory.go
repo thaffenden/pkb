@@ -1,6 +1,8 @@
 package prompt
 
 import (
+	"sort"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/thaffenden/pkb/internal/dir"
 )
@@ -13,6 +15,8 @@ func SelectDirectory(parent string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	sort.Strings(subDirectories)
 
 	answer := struct {
 		Selected string `survey:"directory"`
