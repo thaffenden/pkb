@@ -122,8 +122,8 @@ to be included in the template config to be able to use a custom date format.
 - `{{.Date}}` - the current date in the format YYYY-MM-DD.
 - `{{.Name}}` - the name of the created document.
 - `{{.Time}}` - the time the file was created in the format HH:MM.
-- `{{.Week}}` - the week number the file was created.
-- `{{.Year}}` - the year the file was created.
+- `{{.Week}}` - the current week number.
+- `{{.Year}}` - the current year.
 
 ### Custom file name formats
 
@@ -132,10 +132,12 @@ enter the name value, however you can customise with `name_format`.
 
 The following values are currently supported:
 
-- `{{.Date}}` - the current date in the format `YYYY-MM-DD`
-- `{{.Prompt}}` - prompt for user input
+- `{{.Date}}` - the current date in the format `YYYY-MM-DD`.
+- `{{.Prompt}}` - prompt for user input.
+- `{{.Week}}` - the current week number.
+- `{{.Year}}` - the current year.
 
-You can combine the supported formats to use them both, e.g.:
+You can combine the supported formats to use them together, e.g.:
 
 ```json
 "name_format": "{{.Date}}-{{.Prompt}}"

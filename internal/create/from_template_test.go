@@ -36,10 +36,12 @@ func TestGetFileName(t *testing.T) {
 				NamePrompt: func() (string, error) {
 					return "wow this is great", nil
 				},
-				SelectedTemplate: config.Template{NameFormat: "{{.Date}}-{{.Prompt}}"},
-				Time:             testTime,
+				SelectedTemplate: config.Template{
+					NameFormat: "{{.Date}}-{{.Prompt}}-{{.Week}}-{{.Year}}-foo",
+				},
+				Time: testTime,
 			},
-			expected:    "2022-09-19-wow this is great",
+			expected:    "2022-09-19-wow this is great-38-2022-foo",
 			assertError: require.NoError,
 		},
 	}
