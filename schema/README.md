@@ -10,13 +10,13 @@ e.g.:
 
 ```json
 {
-  "$schema": "https://github.com/thaffenden/pkb/blob/main/schema/config.json",
+  "$schema": "https://raw.githubusercontent.com/thaffenden/pkb/main/schema/config.json",
   "directory": "/home/user",
   ...
 }
 ```
 
-Changes to the schame should be validated through the `make lint-schema`
+Changes to the schema should be validated through the `make lint-schema`
 command to ensure they are correct.
 
 ## WIP
