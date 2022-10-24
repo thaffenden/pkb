@@ -21,20 +21,23 @@ knowledge base.
 
 ## Why?
 
-I use [Obsidian](https://obsidian.md/) but don't enjoy writing up content there
-as much as I do [Neovim](https://neovim.io/). I find I'm more likely to keep
-good notes and actually maintain documents if the editing is done in Neovim
-rather than having to launch a specific app every time I need to jot something
-down.
+I use [Obsidian](https://obsidian.md/) for reading/reviewing and minor updates
+but don't enjoy writing content there as much as I do in
+[Neovim](https://neovim.io/).
+
+I'm more likely to keep good notes and actually maintain documents if the
+editing is done in Neovim rather than having to launch a specific app every
+time I need to jot something down.
 
 `pkb` is designed to be terminal first so you can create and edit documents
 where you are most comfortable, but is fully compatible with Obsidian. See
 [using with Obsidian](#using-with-obsidian) for specifics on how to set them up
-to work together in perfect harmony 🫶
+to work together in perfect harmony.
 
 Don't use Obsidian for your own knowledge base?
 `pkb` is just creating markdown documents from templates, so it's **probably**
-compatible with whatever you are using!
+compatible with whatever you are using! If it's not but you would like it to be
+just raise an issue and I'll see what I can do 🤞.
 
 ## Install
 
@@ -63,7 +66,7 @@ Run `pkb --help` for a full, up to date list of available commands.
 Create a new note/file from your defined templates.
 
 You will be prompted to select the template (and if defined, any sub templates)
-then the file will be opened in your defined editor.
+then the file will be opened in the editor specified in your config file.
 
 Don't want to edit it right now? Just use `--no-edit`. The file will still be
 created, just not opened.
@@ -73,7 +76,7 @@ created, just not opened.
 Open your editor in your notes directory.
 
 Want to pick a specific file through `pkb` rather than in your editor? Use the
-`--pick` flag to select the specific file then open that for editing.
+`--pick` flag to select the specific file then open it for editing.
 
 ### `copy`
 
@@ -82,7 +85,7 @@ Copy the contents of a file to your system clipboard.
 Useful if you want to write up notes about something in your editor, but then
 need to share them somewhere for other people to read.
 
-**Coming soon:** lots more.
+**Coming soon:** even more things to simplify your knowledge base management.
 
 ## Configuration
 
