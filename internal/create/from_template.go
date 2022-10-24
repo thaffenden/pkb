@@ -36,6 +36,8 @@ type templateVariables struct {
 	Date             string
 	Name             string
 	Time             string
+	Week             int
+	Year             int
 }
 
 // NewTemplateRenderer creates a new instance of the TemplateRenderer.
@@ -121,11 +123,14 @@ func (t TemplateRenderer) GetFileName() (string, error) {
 // Render reads the template content and expands any variables.
 func (t TemplateRenderer) Render(content string, writer io.Writer) error {
 	now := t.Time
+	year, week := now.ISOWeek()
 
 	config := templateVariables{
 		Name: t.Name,
 		Date: now.Format("2006-01-02"),
 		Time: now.Format("15:04"),
+		Week: week,
+		Year: year,
 	}
 
 	// If a custom date format is specified on the template config run it through

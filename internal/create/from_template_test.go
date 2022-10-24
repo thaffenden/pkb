@@ -161,8 +161,8 @@ func TestRender(t *testing.T) {
 				},
 				Time: testTime,
 			},
-			templateContent: "{{.Date}}\n{{.Name}}\n{{.Time}}\n{{.CustomDateFormat}}",
-			expected:        "2022-09-19\nexample doc\n16:20\nMonday 19th September",
+			templateContent: "{{.Date}}\n{{.Name}}\n{{.Time}}\n{{.CustomDateFormat}}\n{{.Week}}\n{{.Year}}",
+			expected:        "2022-09-19\nexample doc\n16:20\nMonday 19th September\n38\n2022",
 			assertError:     require.NoError,
 		},
 	}
