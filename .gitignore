@@ -2,4 +2,5 @@
 !**/notes/
 coverage.out
 _null-ls*
-test/output/**/*
+test/output/**/*.md
+!test/output/**/*.tpl.md

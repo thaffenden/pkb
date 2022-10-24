@@ -5,6 +5,7 @@
   "templates": {
     "daily": {
       "file": "daily.tpl.md",
+      "custom_date_format": "Monday 2nd January 2006",
       "name_format": "DATE",
       "output_dir": "daily"
     },
