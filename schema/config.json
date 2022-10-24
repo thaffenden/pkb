@@ -2,19 +2,31 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/thaffenden/pkb/blob/main/schema/config.json",
   "title": "JSON schema for pkb config file.",
-  "description": "Config file for pkb",
-  "type": "object",
-  "properties": {
-    "directory": {
-      "description": "The directory you want to store your notes in. This will be used as the base directory with any template 'out_dirs' being used as sub directories.",
-      "type": "string"
+  "allOf": [
+    {
+      "$ref": "#/$defs/config"
+    }
+  ],
+  "$defs": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "directory": {
+          "description": "The directory you want to store your notes in. This will be used as the base directory with any template 'out_dirs' being used as sub directories.",
+          "type": "string"
+        },
+        "editor": {
+          "description": "The editor to use to open notes after they are created. Must be triggerable from the terminal.",
+          "type": "string"
+        },
+        "templates": {
+          "description": "The names of the template types that will appear in the list to select.",
+          "type": "object",
+          "$ref": "#/$defs/templates"
+        }
+      }
     },
-    "editor": {
-      "description": "The editor to use to open notes after they are created. Must be triggerable from the terminal.",
-      "type": "string"
-    },
-    "templates": {
-      "description": "The templates you want to use to create notes from.",
+    "template": {
       "type": "object",
       "properties": {
         "file": {
@@ -31,11 +43,16 @@
         },
         "sub_templates": {
           "description": "Nested template config, so you can define how to treat things in sub directories.",
-          "$ref": "#/properties/templates"
+          "$ref": "#/$defs/templates"
         }
-      },
-      "required": ["file"]
+      }
     },
-    "required": ["directory", "editor", "templates"]
+    "templates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "$ref": "#/$defs/template"
+      }
+    }
   }
 }

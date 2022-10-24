@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/thaffenden/pkb/0215448835f61e3c9728968ed238872466896fd7/schema/config.json",
+  "$schema": "https://raw.githubusercontent.com/thaffenden/pkb/main/schema/config.json",
   "directory": "/home/tristan/git/pkb/test/output",
   "editor": "nvim",
   "templates": {
