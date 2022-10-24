@@ -12,7 +12,6 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/spf13/viper"
 	"github.com/thaffenden/pkb/internal/config"
 	"github.com/thaffenden/pkb/internal/date"
 	"github.com/thaffenden/pkb/internal/dir"
@@ -37,6 +36,8 @@ type templateVariables struct {
 	Date             string
 	Name             string
 	Time             string
+	Week             int
+	Year             int
 }
 
 // NewTemplateRenderer creates a new instance of the TemplateRenderer.
@@ -66,7 +67,7 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 	}
 
 	templateFile := filepath.Clean(
-		filepath.Join(filepath.Dir(viper.ConfigFileUsed()), t.SelectedTemplate.File),
+		filepath.Join(t.Config.Directory, ".templates", t.SelectedTemplate.File),
 	)
 
 	contents, err := ioutil.ReadFile(templateFile)
@@ -89,7 +90,7 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 		return "", err
 	}
 
-	fmt.Printf("output file created: %s\n", outputPath)
+	fmt.Printf("file created: %s\n", outputPath)
 
 	return outputPath, nil
 }
@@ -103,17 +104,17 @@ func (t TemplateRenderer) GetFileName() (string, error) {
 
 	outputString := t.SelectedTemplate.NameFormat
 
-	if strings.Contains(outputString, "DATE") {
-		outputString = strings.ReplaceAll(outputString, "DATE", t.Time.Format("2006-01-02"))
+	if strings.Contains(outputString, "{{.Date}}") {
+		outputString = strings.ReplaceAll(outputString, "{{.Date}}", t.Time.Format("2006-01-02"))
 	}
 
-	if strings.Contains(outputString, "PROMPT") {
+	if strings.Contains(outputString, "{{.Prompt}") {
 		promptString, err := t.NamePrompt()
 		if err != nil {
 			return "", err
 		}
 
-		outputString = strings.ReplaceAll(outputString, "PROMPT", promptString)
+		outputString = strings.ReplaceAll(outputString, "{{.Prompt}}", promptString)
 	}
 
 	return outputString, nil
@@ -122,11 +123,14 @@ func (t TemplateRenderer) GetFileName() (string, error) {
 // Render reads the template content and expands any variables.
 func (t TemplateRenderer) Render(content string, writer io.Writer) error {
 	now := t.Time
+	year, week := now.ISOWeek()
 
 	config := templateVariables{
 		Name: t.Name,
 		Date: now.Format("2006-01-02"),
 		Time: now.Format("15:04"),
+		Week: week,
+		Year: year,
 	}
 
 	// If a custom date format is specified on the template config run it through
@@ -166,14 +170,14 @@ func (t *TemplateRenderer) OutputPath() (string, error) {
 		outputDir := config.OutputDir
 
 		var err error
-		if config.OutputDir == "{{Prompt}}" {
+		if config.OutputDir == "{{.Prompt}}" {
 			outputDir, err = t.DirectoryPrompt()
 			if err != nil {
 				return "", err
 			}
 		}
 
-		if config.OutputDir == "{{Select}}" {
+		if config.OutputDir == "{{.Select}}" {
 			outputDir, err = t.DirectorySelect(filepath.Join(output...))
 			if err != nil {
 				return "", err
