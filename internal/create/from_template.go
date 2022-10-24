@@ -104,17 +104,17 @@ func (t TemplateRenderer) GetFileName() (string, error) {
 
 	outputString := t.SelectedTemplate.NameFormat
 
-	if strings.Contains(outputString, "DATE") {
-		outputString = strings.ReplaceAll(outputString, "DATE", t.Time.Format("2006-01-02"))
+	if strings.Contains(outputString, "{{.Date}}") {
+		outputString = strings.ReplaceAll(outputString, "{{.Date}}", t.Time.Format("2006-01-02"))
 	}
 
-	if strings.Contains(outputString, "PROMPT") {
+	if strings.Contains(outputString, "{{.Prompt}") {
 		promptString, err := t.NamePrompt()
 		if err != nil {
 			return "", err
 		}
 
-		outputString = strings.ReplaceAll(outputString, "PROMPT", promptString)
+		outputString = strings.ReplaceAll(outputString, "{{.Prompt}}", promptString)
 	}
 
 	return outputString, nil
@@ -170,14 +170,14 @@ func (t *TemplateRenderer) OutputPath() (string, error) {
 		outputDir := config.OutputDir
 
 		var err error
-		if config.OutputDir == "{{Prompt}}" {
+		if config.OutputDir == "{{.Prompt}}" {
 			outputDir, err = t.DirectoryPrompt()
 			if err != nil {
 				return "", err
 			}
 		}
 
-		if config.OutputDir == "{{Select}}" {
+		if config.OutputDir == "{{.Select}}" {
 			outputDir, err = t.DirectorySelect(filepath.Join(output...))
 			if err != nil {
 				return "", err

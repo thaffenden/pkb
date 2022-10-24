@@ -36,7 +36,7 @@ func TestGetFileName(t *testing.T) {
 				NamePrompt: func() (string, error) {
 					return "wow this is great", nil
 				},
-				SelectedTemplate: config.Template{NameFormat: "DATE-PROMPT"},
+				SelectedTemplate: config.Template{NameFormat: "{{.Date}}-{{.Prompt}}"},
 				Time:             testTime,
 			},
 			expected:    "2022-09-19-wow this is great",
@@ -117,7 +117,7 @@ func TestOutputPath(t *testing.T) {
 				Templates: []config.Template{
 					{
 						File:      "magic.tpl.md",
-						OutputDir: "{{Prompt}}",
+						OutputDir: "{{.Prompt}}",
 					},
 				},
 			},

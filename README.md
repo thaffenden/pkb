@@ -121,13 +121,13 @@ enter the name value, however you can customise with `name_format`.
 
 The following values are currently supported:
 
-- `DATE` - the current date in the format `YYYY-MM-DD`
-- `PROMPT` - prompt for user input
+- `{{.Date}}` - the current date in the format `YYYY-MM-DD`
+- `{{.Prompt}}` - prompt for user input
 
 You can combine the supported formats to use them both, e.g.:
 
 ```json
-"name_format": "DATE-PROMPT"
+"name_format": "{{.Date}}-{{.Prompt}}"
 ```
 
 In this example the document would be created with the current date then the
@@ -140,9 +140,9 @@ the dynamic values to prompt you for input at time of creation.
 
 The following values are currently supported:
 
-- `{{Prompt}}` - will let you type in a new directory name. If the directory
+- `{{.Prompt}}` - will let you type in a new directory name. If the directory
 does not already exist it will be created.
-- `{{Select}}` - select from existing directories inside the parent.
+- `{{.Select}}` - select from existing directories inside the parent.
 
 ## Using with Obsidian
 
