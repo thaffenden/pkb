@@ -9,7 +9,7 @@ knowledge base.
 
 ## Contents
 
-- [Why](#why)
+- [Why?](#why)
 - [Install](#install)
   - [Download from GitHub](#download-from-github)
   - [Build it locally](#build-it-locally)
