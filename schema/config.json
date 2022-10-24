@@ -35,6 +35,10 @@
     "template": {
       "type": "object",
       "properties": {
+        "custom_date_format": {
+          "description": "A custom golang date format string. Will be applied to any dates in the template file.",
+          "type": "string"
+        },
         "file": {
           "description": "The name of the template file for the note type. Should be a 'tpl.md' file so variables can be expanded in the markdown template.",
           "type": "string"
