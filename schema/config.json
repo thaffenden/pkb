@@ -24,7 +24,9 @@
           "type": "object",
           "$ref": "#/$defs/templates"
         }
-      }
+      },
+      "required": ["directory", "editor", "templates"],
+      "additionalProperties": false
     },
     "template": {
       "type": "object",
@@ -45,7 +47,9 @@
           "description": "Nested template config, so you can define how to treat things in sub directories.",
           "$ref": "#/$defs/templates"
         }
-      }
+      },
+      "required": ["output_dir"],
+      "additionalProperties": false
     },
     "templates": {
       "type": "object",
