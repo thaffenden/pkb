@@ -89,7 +89,7 @@ func (t TemplateRenderer) CreateAndSaveFile() (string, error) {
 		return "", err
 	}
 
-	fmt.Printf("output file created: %s\n", outputPath)
+	fmt.Printf("file created: %s\n", outputPath)
 
 	return outputPath, nil
 }
