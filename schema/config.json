@@ -36,7 +36,7 @@
       "type": "object",
       "properties": {
         "custom_date_format": {
-          "description": "A custom golang date format string. Will be applied to any dates in the template file.",
+          "description": "A custom golang date format string which can be used in templates with {{.CustomDateFormat}}.",
           "type": "string"
         },
         "file": {
