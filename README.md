@@ -58,7 +58,7 @@ available on your path. Nothing more to it.
 
 Run `pkb --help` for a full, up to date list of available commands.
 
-### new
+### `new`
 
 Create a new note/file from your defined templates.
 
@@ -68,14 +68,14 @@ then the file will be opened in your defined editor.
 Don't want to edit it right now? Just use `--no-edit`. The file will still be
 created, just not opened.
 
-### edit
+### `edit`
 
 Open your editor in your notes directory.
 
 Want to pick a specific file through `pkb` rather than in your editor? Use the
 `--pick` flag to select the specific file then open that for editing.
 
-### copy
+### `copy`
 
 Copy the contents of a file to your system clipboard.
 
