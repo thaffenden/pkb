@@ -1,10 +1,14 @@
 version: 2
+
+anchors:
+  default-config: &default-config
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: dependabot-base
+
 updates:
   - package-ecosystem: "gomod"
-    directory: "/"
-    schedule:
-      interval: "weekly"
+    <<: *default-config
   - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
+    <<: *default-config
