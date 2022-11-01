@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - run: git config --global user.email tristanehaffenden+github@gmail.com
+      - run: git config --global user.email tristan@github-action.com
       - run: git config --global user.name 'Tristan AutoTag'
       - run: make push-tag
       - run: git fetch --force --tags
@@ -24,7 +24,7 @@ jobs:
         with:
           go-version: 1.18
           cache: true
-      - uses: goreleaser/goreleaser-action@v2
+      - uses: goreleaser/goreleaser-action@v3
         with:
           distribution: goreleaser
           version: latest
