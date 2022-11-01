@@ -10,4 +10,5 @@ workflows:
           filters:
             branches:
               ignore:
+                - /^dependabot\/.*/
                 - main
